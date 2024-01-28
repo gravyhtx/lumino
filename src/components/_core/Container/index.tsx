@@ -1,5 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 import type { ReactNode, CSSProperties, MutableRefObject } from 'react';
+import Logo from '~/components/_elements/Logo';
 import type { BasicCSSUnits } from '~/types/Units';
 
 /**
@@ -8,8 +9,8 @@ import type { BasicCSSUnits } from '~/types/Units';
  * This component is a simple wrapper around a div element, providing an easy way
  * to apply styles, classes, and other attributes to a container element.
  *
- * @param {ContainerProps} props - The properties of the component.
- * @param {React.MutableRefObject<HTMLDivElement>} ref - Ref object for the component.
+ * @param {ContainerProps} props The properties of the component.
+ * @param {React.MutableRefObject<HTMLDivElement>} ref Ref object for the component.
  * @returns {React.ReactElement} A div element with given props and children.
  */
 

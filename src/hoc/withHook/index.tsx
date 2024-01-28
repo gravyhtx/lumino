@@ -1,4 +1,4 @@
-import { useEffect, useState, FC, ReactNode } from "react";
+import type { FC } from "react";
 
 /***
  ** This is a Higher-Order Component (HOC) that takes a Component and adds a hook to it.

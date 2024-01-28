@@ -103,9 +103,9 @@ export function formatDate(input: string | number): string {
  * const defaultOpacity = 1;
  * const finalOpacity = returnFirstValid([opacity, style.svg.opacity, defaultOpacity]); // FinalOpacity would be 1
  */
-export function returnFirstValid(values: Array<unknown>): unknown {
+export function returnFirstValid<T>(values: Array<T>): T | undefined {
   for (const value of values) {
-    if (value || value === 0 || value === false) {
+    if (value ?? value === 0 ?? value === false) {
       return value;
     }
   }

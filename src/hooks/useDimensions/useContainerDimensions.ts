@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import type { RefObject } from 'react';
 
 /**
  * Custom hook to measure the dimensions of a container.
@@ -11,7 +12,7 @@ import { useEffect, useRef, useState } from 'react';
  * 
  */
 
-export const useContainerDimensions = () => {
+export const useContainerDimensions = (): [RefObject<HTMLElement>, { width: number; height: number }] => {
   const ref = useRef<HTMLElement>(null);
   const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
@@ -19,12 +20,12 @@ export const useContainerDimensions = () => {
     if (ref.current) {
       setDimensions({
         width: ref.current.offsetWidth,
-        height: ref.current.offsetHeight
+        height: ref.current.offsetHeight,
       });
     }
-  }, [ref.current]); // This runs whenever ref.current changes, including on initial render
+  }, [ref.current]);
 
-  return [ref, dimensions]; // This return type lets TypeScript infer the correct types
+  return [ref, dimensions];
 };
 
 /**

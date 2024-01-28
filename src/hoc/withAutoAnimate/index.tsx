@@ -1,4 +1,5 @@
-import React, { forwardRef, useRef, useEffect, ComponentType, RefAttributes, PropsWithoutRef } from 'react';
+import React, { forwardRef, useRef, useEffect } from 'react';
+import type { ComponentType, PropsWithoutRef, RefAttributes } from 'react';
 import autoAnimate from '@formkit/auto-animate';
 
 /**
@@ -16,8 +17,8 @@ type WithAutoAnimateProps = {
 /**
  * HOC to add auto-animate functionality to a component.
  *
- * @param WrappedComponent - The component to be enhanced.
- * @param config - Optional configuration for auto-animate.
+ * @param WrappedComponent The component to be enhanced.
+ * @param config Optional configuration for auto-animate.
  * @returns Enhanced component with auto-animate functionality.
  */
 function withAutoAnimate<P extends object>(

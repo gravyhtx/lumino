@@ -1,4 +1,5 @@
-import React, { forwardRef, ReactNode } from 'react';
+import React, { forwardRef } from 'react';
+import type { ReactNode } from 'react';
 
 /**
  * HOC that creates a forward ref component wrapper for a given React component.

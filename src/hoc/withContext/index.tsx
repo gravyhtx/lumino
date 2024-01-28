@@ -4,12 +4,6 @@
 import { Component } from 'react';
 import type { ComponentType, ValidationMap } from 'react';
 import { getDisplayName, wrapDisplayName } from '../utils';
-import { setDisplayName } from '../utils/setDisplayName';
-
-interface WithContextProps {
-  childContextTypes: Record<string, unknown>;
-  getChildContext: (props: unknown) => unknown;
-}
 
 /**
  * Provides a higher-order component for adding context to a React component.
