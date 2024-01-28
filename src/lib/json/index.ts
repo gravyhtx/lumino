@@ -1,5 +1,5 @@
 //* CHECK IF INPUT IS VALID JSON STRING
-export const isJsonString = (data: any) => {
+export const isJsonString = (data: string) => {
   if(typeof data !== 'string') {
     return false;
   }
@@ -12,12 +12,12 @@ export const isJsonString = (data: any) => {
 }
 
 //* CHECK IF INPUT IS VALID JSON OBJECT
-export const isJsonObject = (data: any) => {
+export const isJsonObject = (data: unknown) => {
   if (typeof data !== "object") {
     return false;
   } else {
     try {
-      const parsedData = JSON.parse(JSON.stringify(data));
+      const parsedData = JSON.parse(JSON.stringify(data)) as unknown;
       return typeof parsedData === 'object' && parsedData !== null && !Array.isArray(parsedData);
     } catch (e) {
       return false;
@@ -27,7 +27,7 @@ export const isJsonObject = (data: any) => {
 
 //* STRINGIFY OBJECTS AN ARRAY
 //? Takes an array and stringifies any objects it contains
-export function stringifyArray<T extends any[]>(arr: T): T {
+export function stringifyArray<T extends unknown[]>(arr: T): T {
   return arr.map((item) =>
     typeof item === "object" && item !== null ? JSON.stringify(item) : item
   ) as T;
@@ -35,9 +35,9 @@ export function stringifyArray<T extends any[]>(arr: T): T {
 
 //* PARSE JSON STRINGS IN AN ARRAY
 //? Takes an array and parses any stringified objects it contains
-export function parseArray<T extends any[]>(arr: T): T {
+export function parseArray<T extends string[]>(arr: T): T {
   return arr.map((item) =>
-    typeof item === "string" && isJsonString(item) ? JSON.parse(item) : item
+    typeof item === "string" && isJsonString(item) ? JSON.parse(item) as object : item
   ) as T;
 }
 
@@ -54,10 +54,10 @@ export function parseArray<T extends any[]>(arr: T): T {
  * const objectsArray = getObjectsFromString(str); // Returns [{key: "value"}, {keys: [1, 2, 3]}]
  * const firstObject = getObjectsFromString(str, false); // Returns {key: "value"}
 */
-export function getObjectsFromString(str: string, parse: boolean = true, array: boolean = true): unknown[] | unknown {
+export function getObjectsFromString(str: string, parse = true, array = true): unknown {
   const objectsRegex = /\{.*?\}/gs;
   const matches = str.match(objectsRegex);
-  const parseString = (s: string) => parse ? JSON.parse(s) : s;
+  const parseString = (s: string) => parse ? JSON.parse(s) as object : s;
   
   if (!matches) {
     return array ? [] : undefined;

@@ -1,6 +1,5 @@
 import React, { forwardRef, memo } from 'react';
 import type { ReactNode, CSSProperties, MutableRefObject } from 'react';
-import Logo from '~/components/_elements/Logo';
 import type { BasicCSSUnits } from '~/types/Units';
 
 /**

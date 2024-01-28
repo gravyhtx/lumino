@@ -6,6 +6,7 @@ export type Uppercase =
 export type Letter = Lowercase | Uppercase;
 export type Number = '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type Character = Letter | Number;
 
 export type Punctuation = '!'|'.'|','|'?'|'-'|'_'|'+'|'='|'/'|'\\'|'('|')'|'['|']'|'{'|'}'|'<'|'>';

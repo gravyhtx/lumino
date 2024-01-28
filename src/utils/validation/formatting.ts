@@ -72,7 +72,7 @@ export function formatUrl(
   }
 ): string {
   let formattedUrl = url.trim();
-  const { spaces = '-', httpsOnly = true, checkSafety = false } = opts ?? {};
+  const { spaces = '-', httpsOnly = true } = opts ?? {};
 
   if(!httpsOnly && isValidUrl(url)) {
     return url;

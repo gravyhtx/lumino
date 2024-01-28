@@ -1,4 +1,11 @@
-//* CHECK IF INPUT IS VALID JSON STRING
+/**
+ * Checks if the input is a valid JSON string.
+ * @param data - The data to check.
+ * @returns `true` if the input is a valid JSON string, `false` otherwise.
+ * @example
+ * isJsonString({key: "value"}); // Returns false
+ * isJsonString("{\"key\": \"value\"}"); // Returns true
+*/
 export const isJsonString = (data: unknown) => {
   if(typeof data !== 'string') {
     return false;
@@ -11,7 +18,14 @@ export const isJsonString = (data: unknown) => {
   return true;
 }
 
-//* CHECK IF INPUT IS VALID JSON OBJECT
+/**
+ * Checks if the input is a valid JSON object.
+ * @param data - The data to check.
+ * @returns `true` if the input is a valid JSON object, `false` otherwise.
+ * @example
+ * isJsonObject({key: "value"}); // Returns true
+ * isJsonObject("Not an object"); // Returns false
+*/
 export const isJsonObject = (data: unknown) => {
   if (typeof data !== "object") {
     return false;
@@ -25,16 +39,32 @@ export const isJsonObject = (data: unknown) => {
   }
 }
 
-//* STRINGIFY OBJECTS AN ARRAY
-//? Takes an array and stringifies any objects it contains
+/**
+ * Takes an array and stringifies any objects it contains.
+ * @param arr - The array to stringify.
+ * @returns The stringified array.
+ * @example
+ * const arr = [{key: "value"}, {key: "value"}];
+ * const stringifiedArr = stringifyArray(arr); // Returns ["{\"key\": \"value\"}", "{\"key\": \"value\"}"]
+ * const arr2 = [{key: "value"}, "Not an object"];
+ * const stringifiedArr2 = stringifyArray(arr2); // Returns ["{\"key\": \"value\"}", "Not an object"]
+*/
 export function stringifyArray<T extends unknown[]>(arr: T): T {
   return arr.map((item) =>
     typeof item === "object" && item !== null ? JSON.stringify(item) : item
   ) as T;
 }
 
-//* PARSE JSON STRINGS IN AN ARRAY
-//? Takes an array and parses any stringified objects it contains
+/**
+ * Takes an array and parses any stringified objects it contains.
+ * @param arr - The array to parse.
+ * @returns The parsed array.
+ * @example
+ * const arr = ["{\"key\": \"value\"}", "{\"key\": \"value\"}"];
+ * const parsedArr = parseArray(arr); // Returns [{key: "value"}, {key: "value"}]
+ * const arr2 = ["{\"key\": \"value\"}", "Not a JSON string"];
+ * const parsedArr2 = parseArray(arr2); // Returns [{key: "value"}, "Not a JSON string"]
+*/
 export function parseArray<T>(arr: T[]): T[] {
   return arr.map((item) => {
     if (typeof item === "string" && isJsonString(item)) {
@@ -50,7 +80,6 @@ export function parseArray<T>(arr: T[]): T[] {
   });
 }
 
-//* GET ALL JSON OBJECTS FROM A STRING
 /**
  * Extracts all objects from a string and returns them in an array. If the `array` prop is `false`, only the first object is returned.
  * @param str - The string to extract objects from.

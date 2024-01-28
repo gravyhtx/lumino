@@ -1,7 +1,7 @@
 // Based on 'RECOMPOSE' package and converted to TypeScript
 // https://github.com/acdlite/recompose/blob/master/src/packages/recompose/getDisplayName.js
 
-import { ComponentType } from "react";
+import type { ComponentType } from "react";
 
 /**
  *  Gets the display name of a component
