@@ -4,7 +4,7 @@
 
 // import { api } from "~/utils/api";
 
-// export default function Home() {
+export default function Test() {
 //   const hello = api.post.hello.useQuery({ text: "from tRPC" });
 
 //   return (
@@ -77,4 +77,9 @@
 //       </button>
 //     </div>
 //   );
-// }
+  return (
+    <div>
+      <h1>Test</h1>
+    </div>
+  )
+}
