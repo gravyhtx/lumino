@@ -1,8 +1,9 @@
 // Taken from 'RECOMPOSE' package and converted to TypeScript
 // https://github.com/acdlite/recompose/blob/master/src/packages/recompose/renderComponent.js
 
-import React, { ComponentType, FC } from 'react';
-import { wrapDisplayName } from '../../../lib/helpers/components/hoc';
+import React from 'react';
+import type { ComponentType, FC } from 'react';
+import { wrapDisplayName } from '../utils';
 
 /**
  * A higher-order component (HOC) that simply renders the provided component.
@@ -27,7 +28,7 @@ export function renderComponent<Props extends object>(Component: ComponentType<P
   // Set a displayName for the RenderComponent for better debugging in development.
   // The `wrapDisplayName` function presumably prefixes or modifies the display name.
   if (process.env.NODE_ENV !== 'production') {
-    RenderComponent.displayName = wrapDisplayName(Component.displayName || Component.name, 'renderComponent');
+    RenderComponent.displayName = wrapDisplayName(Component.displayName ?? Component.name, 'renderComponent');
   }
 
   return RenderComponent;
