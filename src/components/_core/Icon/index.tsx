@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import * as FeatherIcon from 'react-feather';
-import { LucideProps, icons as LucideIcons } from 'lucide-react';
+import { icons as LucideIcons } from 'lucide-react';
+import type { LucideProps } from 'lucide-react';
 import { classnames } from "~/utils/global";
 import styles from './icon.module.css';
 
