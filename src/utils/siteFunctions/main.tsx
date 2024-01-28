@@ -1,11 +1,28 @@
 import { remark } from 'remark';
 import html from 'remark-html';
+// import { wordCount } from '../validation/checks';
+import { WORDS_LIST } from '~/constants';
+import Image from 'next/image';
 
 //! //=======================\\ !//
 //! || TEMPERATURE FUNCTIONS || !//
 //! \\=======================// !//
 
+/**
+ * Converts a temperature from Celsius to Fahrenheit.
+ * @param {number} celsius - The temperature in Celsius.
+ * @returns {number} - The converted temperature in Fahrenheit.
+ * @example
+ * const tempInFahrenheit = toFahrenheit(30); // 86
+ */
 export const toFahrenheit = (celsius: number) => celsius * 9 / 5 + 32;
+/**
+ * Converts a temperature from Fahrenheit to Celsius.
+ * @param {number} fahrenheit - The temperature in Fahrenheit.
+ * @returns {number} - The converted temperature in Celsius.
+ * @example
+ * const tempInCelsius = toCelsius(86); // 30
+ */
 export const toCelsius = (fahrenheit: number) => (fahrenheit - 32) * 5 / 9;
 
 
@@ -27,6 +44,14 @@ export const toCelsius = (fahrenheit: number) => (fahrenheit - 32) * 5 / 9;
 //! \\====================// !//
 
 //* CHECK IF DEVICE IS MOBILE
+/**
+ * Checks if the device is a mobile device based on the user agent or screen size.
+ * @param {boolean} [checkScreenSize=false] - Optional flag to check screen size for mobile device identification.
+ * @returns {boolean} - True if the device is a mobile device, false otherwise.
+ * @example
+ * const mobileDevice = isMobile(); // True or false based on the user agent.
+ * const mobileByScreenSize = isMobile(true); // Additionally checks screen size.
+ */
 export const isMobile = (checkScreenSize = false) => {
   if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   || (checkScreenSize === true && window.matchMedia("only screen and (max-width: 760px)").matches) ) {
@@ -157,6 +182,9 @@ export const blockCloseWindow = (message: string, asAlert = false) => {
 //! || RETURN DATA || !//
 //! \\=============// !//
 
+/**
+ * Returns a blank 1x1 pixel, transparent Data PNG.
+ */
 export const blankPixel = () => {
   //? Returns an empty 1x1 px Data PNG
   const url = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -170,42 +198,147 @@ export const blankPixel = () => {
 /////////////////
 
 //* GET DATA URL FROM CANVAS
-export const canvasToDataUrl = ( canvasEl: HTMLCanvasElement ) => {
+/**
+ * Takes a canvas element and returns its data URL.
+ * @param {HTMLCanvasElement} canvasEl - The canvas element to get the data URL of.
+ * @returns {string} The canvas element's data URL.
+ * @example
+ * const canvas = document.querySelector('canvas');
+ * const dataUrl = canvasToDataUrl(canvas);
+ * console.log(dataUrl); // Outputs a data URL like "data:image/png;base64,iVBO...ggg=="
+ */
+export const canvasToDataUrl = ( canvasEl: HTMLCanvasElement ): string => {
   const dataUrl = canvasEl.toDataURL();
   return dataUrl;
 }
 
 //* USE CANVAS DATA URL TO EXPORT AN IMAGE
-export const canvasToImg = (
-  el: HTMLCanvasElement,
-  alt: string,
-  classes: string,
-  id: string,
-) => {
+type CanvasToImgProps = {
+  el: HTMLCanvasElement;
+  alt: string;
+  classes: string;
+  id?: string;
+  loading?: 'lazy' | 'eager';
+  width?: number;
+  height?: number;
+  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
+  useNextImage?: boolean;
+};
+/**
+ * Converts a canvas element to an image element.
+ * 
+ * @param {HTMLCanvasElement} el - The canvas element to convert.
+ * @param {string} alt - The alt text for the image.
+ * @param {string} classes - The class(es) to assign to the image.
+ * @param {string} [id] - An optional ID for the image.
+ * @param {string} [loading] - The loading attribute for the image.
+ * @returns {JSX.Element} - The created image element as a JSX element.
+ *
+ * @example
+ * const MyComponent = () => {
+ *   const canvasRef = useRef(null);
+ *   const [imageSrc, setImageSrc] = useState('');
+ * 
+ *   useEffect(() => {
+ *     const canvas = canvasRef.current;
+ *     // Draw something on the canvas here
+ *     setImageSrc(canvas.toDataURL());
+ *   }, []);
+ * 
+ *   return (
+ *     <div>
+ *       <canvas ref={canvasRef}></canvas>
+ *       {imageSrc && <img src={imageSrc} alt="A beautiful scene" className="my-image-class" id="myImageId" />}
+ *     </div>
+ *   );
+ * };
+ */
+export const canvasToImg = ({
+  el,
+  alt,
+  classes,
+  id,
+  loading = 'lazy',
+  width,
+  height,
+  objectFit,
+  useNextImage = false,
+}: CanvasToImgProps): JSX.Element => {
   const dataUrl = el.toDataURL();
-  const img = document.write(`<img src="${dataUrl}" className=${classes} alt=${alt} id=${id} />`);
-  return img;
-}
+  
+  return useNextImage ?
+    // Using Next.js Image component
+    <Image 
+      src={dataUrl} 
+      alt={alt} 
+      className={classes} 
+      id={id} 
+      width={width} 
+      height={height} 
+      layout="responsive"
+      objectFit={objectFit}
+    />
+    :
+    // Using standard img tag
+    // eslint-disable-next-line @next/next/no-img-element
+    <img 
+      src={dataUrl} 
+      className={classes} 
+      alt={alt} 
+      id={id} 
+      loading={loading} 
+      width={width} 
+      height={height}
+      style={{ objectFit }}
+    />
+};
 
 //* CONVERT MD TO HTML
-export async function markdownToHtml(markdown: string) {
+/**
+ * Takes a string of markdown and returns a string of HTML.
+ * @param {string} markdown - The markdown to convert to HTML.
+ * @returns {string} The converted HTML.
+ * @example
+ * const markdown = '# This is a heading';
+ * const html = markdownToHtml(markdown); // Returns "<h1>This is a heading</h1>"
+ */
+export async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark().use(html).process(markdown)
   return result.toString()
 }
 
 //* GET REGEX INFORMATION
 interface ExtendedRegExp extends RegExp {
-  hasIndices: boolean;
+  hasIndices: boolean; // Include new 'hasIndices' property in case it does not exist on 'RegExp' yet.
 }
-
-export const getRegexData = (regex: ExtendedRegExp) => {
-  const { lastIndex, dotAll, flags, global, hasIndices, ignoreCase, multiline, source, sticky, unicode } = regex;
-  return { lastIndex, dotAll, flags, global, hasIndices, ignoreCase, multiline, source, sticky, unicode } 
+/**
+ * Takes a regular expression and returns the same regular expression object.
+ * This can be useful if you want to pass around regex objects with extended properties or methods.
+ * @param {ExtendedRegExp} regex - The regular expression to return.
+ * @returns {ExtendedRegExp} The same regular expression object.
+ * @example
+ * const regex = /test/gi;
+ * const sameRegex = getRegexData(regex);
+ * console.log(sameRegex); // Outputs the same regex object: /test/gi
+ */
+export const getRegexData = (regex: ExtendedRegExp): ExtendedRegExp => {
+  return regex;
 }
 
 //* GET NODE PROPERTIES
 type NodeProperties = Record<string, string | null>;
 type Accumulator = Record<string, string>
+/**
+ * Takes a node and returns an object containing its properties.
+ * @param {NodeProperties} node - The node to get the properties of.
+ * @returns {NodeProperties} An object containing the node's properties.
+ * 
+ * @example
+ * //* To get the properties of a node:
+ * const node = document.querySelector('div');
+ * const nodeProperties = getNodeProperties(node);
+ * console.log(nodeProperties); // Outputs an object like { id: "myDiv", class: "myClass", style: "color: red;" }
+ */
 export const getNodeProperties = (node: NodeProperties): NodeProperties => {
   const showProperties = Object.entries(node)
     .filter(([_, value]) => value != null && value !== '')
@@ -215,4 +348,29 @@ export const getNodeProperties = (node: NodeProperties): NodeProperties => {
     }, {});
 
   return showProperties;
+};
+
+//* GENERATE RANDOM WORDS FROM WORDS_LIST
+/**
+ * Generates a string of random words from the WORDS_LIST.
+ * 
+ * @param {number} wordCount - The number of random words to generate. Defaults to 1.
+ * @returns {string[]} An array of randomly selected words.
+ * 
+ * @example
+ * //* Generating an array of a single random word
+ * console.log(randomWord()); // Outputs a word: ["like"]
+ * 
+ * @example
+ * //* Generating an array of 5 random words
+ * console.log(randomWord(5)); // Outputs a string of words: ["just", "weapon", "like", "weary", "like"]
+ * 
+ * @example
+ * //* Generating a string of random words
+ * console.log(randomWord(5).join(' ')); // Outputs a string of words: "just weapon like weary like"
+ */
+export const randomWord = (wordCount?: number): string[] => {
+  return Array.from({ length: wordCount ?? 1 }, () => 
+    WORDS_LIST[Math.floor(Math.random() * WORDS_LIST.length)]
+  ) as string[];
 };
