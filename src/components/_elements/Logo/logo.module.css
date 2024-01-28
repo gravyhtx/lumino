@@ -1,0 +1,22 @@
+.container {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex: none;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
+  height: min-content;
+  justify-content: flex-start;
+  overflow: visible;
+  padding: 0;
+  position: relative;
+  text-decoration: none;
+  width: min-content;
+}
+
+.svg {
+  image-rendering: pixelated;
+  flex-shrink: 0;
+  background-size: 100% 100%;
+}

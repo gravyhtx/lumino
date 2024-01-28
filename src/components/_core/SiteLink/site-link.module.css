@@ -1,0 +1,11 @@
+.default {
+  --site-link-color: rgba(255, 255, 255, .5);
+  color: var(--site-link-color);
+  text-decoration: none;
+  cursor: pointer;
+} 
+
+.default:hover {
+  --site-link-color-hover: rgba(255, 255, 255, 1);
+  color: var(--site-link-color-hover);
+}

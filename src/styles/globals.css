@@ -1,3 +1,201 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* makes sizing simpler */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* dark mode user-agent-styles */
+/* improves punctuation in supported browsers */
+html {
+  /* color-scheme: dark light; */
+  hanging-punctuation: first last;
+}
+
+/* Improved heading in supported browsers */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/* improve readability with max-width on paragraphs and lists */
+/* prevent orphans in supported browsers */
+p,
+li {
+  max-width: var(--p-max-width, 65ch);
+  text-wrap: pretty;
+}
+
+ 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+ 
+    --radius: 0.5rem;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    --mobile-breakpoint: 768px;
+    --p-max-width: 65ch;
+
+    --lumino-color-dark-1: #1a202c;
+    --lumino-color-background: #02041E;
+    --lumino-color-dark-2: #2d3748;
+    --lumino-text-color: rgb(241, 245, 249);
+    --lumino-font-family: Inter-Light, Inter, Inter Placeholder, sans-serif;
+    --color-darkblue-1: #020718;
+    --color-darkblue-2: #02041D;
+    --color-darkblue-3: #0B1B33;
+    --color-highlight-blue: #08FFFC;
+    --color-highlight-green: #00F3AD;
+    --header-text-color: rgb(199, 199, 199);
+    --card-border-color: rgba(255, 255, 255, .2);
+    --card-header-text-color: rgb(199, 199, 199);
+    --header-text-font-family: "SF Pro Display Medium", "SF Pro Display Medium Placeholder", "-apple-system", "BlinkMacSystemFont", sans-serif;
+    --card-header-font-size: 28px;
+    --card-header-letter-spacing: -1.65px;
+    --card-text-color: rgb(241, 245, 249);
+    --site-link-color: rgba(255, 255, 255, .5);
+    --site-link-color-hover: rgba(255, 255, 255, 1);
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+body {
+  font-family: var(--lumino-font-family);
+  font-style: normal;
+  font-weight: 300;
+  background: var(--lumino-color-background);
+  color: var(--lumino-text-color);
+  font-size: 19px;
+  letter-spacing: -0.38px;
+  line-height: inherit;
+  text-transform: none;
+  text-decoration: none;
+  line-height: 30px;
+  text-align: center;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h3 {
+  color: var(--header-text-color);
+  font-family: var(--header-text-font-family);
+  font-size: 28px;
+  font-weight: 400;
+}
+
+input {
+  color: black;
+  padding: 0px 8px;
+}
+
+.card {
+  background: linear-gradient(180deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,0) 100%);
+  border: 1px solid var(--card-border-color);
+  border-radius: 22px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, .2);
+  color: white;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: center;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  height: 497px;
+  width: 410px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  white-space: pre;
+  padding: 30px 0;
+  will-change: transform;
+}
+
+body, input, textarea, select, button {
+  font-size: 12px;
+  font-family: sans-serif;
+}
+
+.card .header {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.2;
+  text-transform: none;
+}

@@ -3,11 +3,12 @@
  * for Docker builds.
  */
 await import("./src/env.js");
+import withTM from 'next-transpile-modules'; // Add other packages here as needed
+
 
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.
    *
@@ -19,4 +20,4 @@ const config = {
   },
 };
 
-export default config;
+export default withTM(['lucide-react', 'react-feather'])(config);
