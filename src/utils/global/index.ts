@@ -8,6 +8,9 @@
 */
 export const classnames = (...classes: (string | undefined)[]): string => classes.filter(Boolean).join(" ");
 
+
+export const titlecase = (title: string) => title.charAt(0).toUpperCase() + title.slice(1);
+
 /**
  * Normalizes an array of numbers so that their sum equals a specified target.
  * Adjusts the values proportionally and respects the maximum decimal places.

@@ -1,12 +1,58 @@
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
+import { titlecase } from "~/utils/global";
+import InfoCard from "./InfoCard";
 
-const Cards = () => {
+type Timeframes = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year';
+type Amount = `${'+'|'-'|''}${'$'|''}${string}${'%'|''}`;
+type Delta = `${'+'|'-'}${string}${'%'|''}`;
+type DeltaType = {
+  amount: [Delta, Delta, Delta, Delta];
+  time: [Timeframes, Timeframes, Timeframes, Timeframes];
+}
+
+type InfoCardsProps = {
+  timeframe?: Timeframes | [Timeframes, Timeframes, Timeframes, Timeframes];
+  title?: [string, string, string, string];
+  value?: [Amount, Amount, Amount, Amount];
+  delta?: DeltaType;
+}
+
+const InfoCards: React.FC<InfoCardsProps> = ({timeframe, title, value, delta}): JSX.Element => {
+
+  // const  = timeframe ?? 'quarter';
+  title = title ?? ['Total Revenue', 'Subscriptions', 'Sales', 'Active Now'];
+  value = value ?? ['$45,231.89', '+2350', '+12,234', '+537'];
+  const deltaObj = {
+    a: {amount: delta?.amount[0] ?? '+20.1%', time: delta?.time[0] ?? 'month'},
+    b: {amount: '+180.1%', time: 'month'},
+    c: {amount: '+19%', time: 'month'},
+    d: {amount: '+201', time: 'hour'}
+  };
+  
+  const timeframes = {
+    hour: 'since last hour',
+    day: 'today',
+    week: 'this week',
+    month: 'this month',
+    quarter: 'in the past 3 months',
+    year: 'this year'
+  };
+
+  const titleValue = (title: string) => `${titlecase(title.trim())}`;
+  const amountValue = (amount: string) => `${amount.trim()}`;
+  const deltaValue = (amount: string, time:string) => `${amount as Delta} ${timeframes[time as Timeframes]}`;
+
   return (<>
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
+    <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+      <InfoCard title={titleValue(title[0])} amount={amountValue(value[0])} timeSince={deltaValue(deltaObj.a.amount, deltaObj.a.time)} />
+      <InfoCard title={titleValue(title[1])} amount={amountValue(value[1])} timeSince={deltaValue(deltaObj.b.amount, deltaObj.b.time)} />
+      <InfoCard title={titleValue(title[2])} amount={amountValue(value[2])} timeSince={deltaValue(deltaObj.c.amount, deltaObj.c.time)} />
+      <InfoCard title={titleValue(title[3])} amount={amountValue(value[3])} timeSince={deltaValue(deltaObj.d.amount, deltaObj.d.time)} />
+      {/* <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Total Revenue
+            {titleValue(title[0])}
           </CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +68,9 @@ const Cards = () => {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">$45,231.89</div>
+          <div className="text-2xl font-bold">
+            {amountValue(value[0] ?? '$45,231.89')}
+          </div>
           <p className="text-xs text-muted-foreground">
             +20.1% from last month
           </p>
@@ -31,7 +79,7 @@ const Cards = () => {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Subscriptions
+            {titleValue(title[1] ?? 'Subscriptions')}
           </CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +97,9 @@ const Cards = () => {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+2350</div>
+          <div className="text-2xl font-bold">
+            {amountValue(value[1] ?? '+2350')}
+          </div>
           <p className="text-xs text-muted-foreground">
             +180.1% from last month
           </p>
@@ -57,7 +107,9 @@ const Cards = () => {
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Sales</CardTitle>
+          <CardTitle className="text-sm font-medium">
+          {titleValue(title[2] ?? 'Sales')}
+          </CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -73,16 +125,18 @@ const Cards = () => {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+12,234</div>
+          <div className="text-2xl font-bold">
+            {amountValue(value[2] ?? '+12,234')}
+          </div>
           <p className="text-xs text-muted-foreground">
-            +19% from last month
+            {deltaValue(delta[0].amount ?? '+19%',delta[0].time ?? 'month')}
           </p>
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Active Now
+            {titleValue(title[3] ?? 'Active Now')}
           </CardTitle>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -98,13 +152,15 @@ const Cards = () => {
           </svg>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+573</div>
+          <div className="text-2xl font-bold">
+          {amountValue(value[3] ?? '+537')}
+          </div>
           <p className="text-xs text-muted-foreground">
-            +201 since last hour
+            {deltaValue(delta[0].amount ?? '+201',delta[0].time ?? 'hour')}
           </p>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
 </>)
 }
-export default Cards;
+export default InfoCards;

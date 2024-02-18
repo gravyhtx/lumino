@@ -1,6 +1,17 @@
 .wrapper {
-  display: flex;
   min-height: 100vh;
+}
+
+.container {
+  display: flex;
+}
+
+.header {
+  padding: 20px;
+}
+
+.header .logo {
+  width: 140px
 }
 
 .content {
@@ -9,7 +20,7 @@
   flex-grow: 1; /* Take up remaining space */
 }
 
-@media screen and (max-width: var(--mobile-)) {
+@media screen and (min-width: 767px) {
   /* Adjustments for mobile view */
   .dashboard {
     flex-direction: column;

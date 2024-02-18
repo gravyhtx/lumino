@@ -150,8 +150,8 @@ body {
 h3 {
   color: var(--header-text-color);
   font-family: var(--header-text-font-family);
-  font-size: 28px;
-  font-weight: 400;
+  font-size: 24px;
+  font-weight: 600;
 }
 
 input {
@@ -198,4 +198,21 @@ body, input, textarea, select, button {
   text-decoration: none;
   line-height: 1.2;
   text-transform: none;
+}
+
+/* RECHARTS */
+/* .recharts-wrapper {
+  left: 0px !important;
+}
+@media screen and (max-width: 640px) {
+  .recharts-wrapper {
+    left: -15px !important;
+  }
+} */
+.recharts-wrapper {
+  left: -15px !important; /* Apply the style change for screens wider than the mobile breakpoint */
+}
+
+.left-align {
+  text-align: left;
 }

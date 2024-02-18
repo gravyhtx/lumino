@@ -13,10 +13,13 @@
   position: relative;
   text-decoration: none;
   width: min-content;
+  transform-origin: 50% 50% 0px;
 }
 
 .svg {
   image-rendering: pixelated;
   flex-shrink: 0;
   background-size: 100% 100%;
+  opacity: 1;
+  width: 140px;
 }

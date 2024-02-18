@@ -13,3 +13,7 @@
   line-height: var(--line-height);
   font-weight: var(--font-weight); */
 }
+
+.center {
+  justify-content: center;
+}
