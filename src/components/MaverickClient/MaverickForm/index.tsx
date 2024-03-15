@@ -1,23 +1,23 @@
 // ~/components/MaverickForm.tsx
 import React from 'react';
-import { z } from 'zod';
-import ReactHookForm, { Checkbox, Input, RadioGroup, Submit } from '~/components/_core/ReactHookForm';
-import type { UseFormReturn } from 'react-hook-form';
+// import { z } from 'zod';
+// import ReactHookForm, { Checkbox, Input, RadioGroup, Submit } from '~/components/_core/ReactHookForm';
+// import type { UseFormReturn } from 'react-hook-form';
 
-const schema = z.object({
-  firstName: z.string().min(2, 'First name must be at least 2 characters'),
-  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  companyName: z.string().min(2, 'Company name must be at least 2 characters'),
-  productService: z.string().min(2, 'Product/Service must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().min(10, 'Phone number must be at least 10 characters'),
-  website: z.string().min(4, 'Website must be at least 4 characters'),
-  currentlyProcessing: z.string(),
-  monthlyProcessingVolume: z.string().min(1, 'Monthly processing volume must be at least 1 character'),
-  agreeTerms: z.boolean(),
-});
+// const schema = z.object({
+//   firstName: z.string().min(2, 'First name must be at least 2 characters'),
+//   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+//   companyName: z.string().min(2, 'Company name must be at least 2 characters'),
+//   productService: z.string().min(2, 'Product/Service must be at least 2 characters'),
+//   email: z.string().email('Invalid email address'),
+//   phone: z.string().min(10, 'Phone number must be at least 10 characters'),
+//   website: z.string().min(4, 'Website must be at least 4 characters'),
+//   currentlyProcessing: z.string(),
+//   monthlyProcessingVolume: z.string().min(1, 'Monthly processing volume must be at least 1 character'),
+//   agreeTerms: z.boolean(),
+// });
 
-type FormData = z.infer<typeof schema>;
+// type FormData = z.infer<typeof schema>;
 
 type FormProps = {
   submit: React.ReactNode;
@@ -25,10 +25,10 @@ type FormProps = {
 };
 
 const MaverickForm: React.FC<FormProps> = ({ submit, height }) => {
-  const onSubmit = (data: FormData) => {
-    // Handle form submission here
-    console.log(data);
-  };
+  // const onSubmit = (data: FormData) => {
+  //   // Handle form submission here
+  //   console.log(data);
+  // };
 
   return (<>
     <h3>Apply Now</h3>

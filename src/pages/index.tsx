@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Card from "~/components/Card";
 import BarGraph from "~/components/Dashboard/BarGraph";
 import QuickView from "~/components/Dashboard/QuickView";
@@ -5,14 +6,12 @@ import RecentSales from "~/components/Dashboard/RecentSales";
 import Login from "~/components/Login";
 import Section from "~/components/_core/Section";
 import Dashboard from "~/layouts/Dashboard";
-import { classnames } from "~/utils/global";
-import styles from "./styles/index.module.css";
-import { LogoSvg } from "~/components/_elements/Logo/LogoSvg";
+import AffiliateForm from "~/components/MaverickClient/AffiliateForm";
 import MaverickForm from "~/components/MaverickClient/MaverickForm";
 import { Submit } from "~/components/_core/ReactHookForm";
-import { useState } from "react";
-import type { APIErrorResponse, Documents } from "~/schema";
-import AffiliateForm from "~/components/MaverickClient/AffiliateForm";
+// import type { APIErrorResponse, Documents } from "~/schema";
+import styles from "./styles/index.module.css";
+import { classnames } from "~/utils/global";
 
 export default function Home () {
   const Continue = () => <Submit text="Continue" onClick={() => setStep([2,0])} />;

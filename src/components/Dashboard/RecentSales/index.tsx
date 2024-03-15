@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
+import { Avatar } from "@radix-ui/react-avatar"
 import { classnames } from "~/utils/global";
 import styles from "./recents.module.css";
 

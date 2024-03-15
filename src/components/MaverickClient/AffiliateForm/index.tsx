@@ -1,18 +1,18 @@
 // ~/components/MaverickForm.tsx
 import React from 'react';
-import { z } from 'zod';
-import ReactHookForm, { Input, Submit } from '~/components/_core/ReactHookForm';
-import type { UseFormReturn } from 'react-hook-form';
+// import { z } from 'zod';
+// import ReactHookForm, { Input, Submit } from '~/components/_core/ReactHookForm';
+// import type { UseFormReturn } from 'react-hook-form';
 
-const schema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  companyName: z.string().min(2, 'Company name must be at least 2 characters'),
-  productService: z.string().min(2, 'Product/Service must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  telephone: z.string().min(10, 'Telephone number must be at least 10 characters'),
-});
+// const schema = z.object({
+//   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+//   companyName: z.string().min(2, 'Company name must be at least 2 characters'),
+//   productService: z.string().min(2, 'Product/Service must be at least 2 characters'),
+//   email: z.string().email('Invalid email address'),
+//   telephone: z.string().min(10, 'Telephone number must be at least 10 characters'),
+// });
 
-type FormData = z.infer<typeof schema>;
+// type FormData = z.infer<typeof schema>;
 
 type FormProps = {
   submit: React.ReactNode;

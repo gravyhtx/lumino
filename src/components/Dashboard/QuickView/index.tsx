@@ -14,7 +14,6 @@ type DeltaType = {
 }
 
 type InfoCardsProps = {
-  timeframe?: Timeframes | [Timeframes, Timeframes, Timeframes, Timeframes];
   title?: [string, string, string, string];
   value?: [Amount, Amount, Amount, Amount];
   delta?: DeltaType;
@@ -22,7 +21,7 @@ type InfoCardsProps = {
   margin?: string;
 }
 
-const QuickView: React.FC<InfoCardsProps> = ({timeframe, title, value, delta, margin}): JSX.Element => {
+const QuickView: React.FC<InfoCardsProps> = ({title, value, delta, margin}): JSX.Element => {
   title = title ?? ['Total Revenue', 'Subscriptions', 'Transaction Quantity', 'Next Payout'];
   value = value ?? ['$45,231.89', '+2350', '+12,234', '+537'];
   const deltaObj = {

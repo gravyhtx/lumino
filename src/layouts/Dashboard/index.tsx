@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import type { ReactNode } from 'react';
 import Main from '~/components/Main';
 import styles from './dashboard.module.css';
@@ -7,7 +7,6 @@ import Logo from '~/components/_elements/Logo';
 
 interface DashboardProps {
   children: ReactNode;
-  name?: string;
   className?: string;
   margin?: {
     size: number | 'px' | 'auto';
@@ -22,7 +21,7 @@ interface DashboardProps {
  * @param {DashboardProps} props - Props for the Dashboard component.
  * @returns {React.ReactElement} - The Dashboard layout component.
  */
-const Dashboard: React.FC<DashboardProps> = ({ children, name, className, margin, loggedIn, logout }) => {
+const Dashboard: React.FC<DashboardProps> = ({ children, className, margin, loggedIn, logout }) => {
   // const [isNavOpen, setNavOpen] = useState(false);
 
   // const toggleNav = () => setNavOpen(!isNavOpen);
