@@ -4,14 +4,25 @@
 
 .container {
   display: flex;
+  min-height: calc(100vh - 85px);
 }
 
 .header {
+  display: flex; /* Aligns child divs in a row */
+  justify-content: space-between; /* Separates the child divs to each end */
+  align-items: center; /* Vertically centers the child divs */
   padding: 20px;
+  height: 85px;
 }
 
 .header .logo {
   width: 140px
+}
+
+.header .logout {
+  text-decoration: underline;
+  float: right;
+  font-size: 1rem;
 }
 
 .content {

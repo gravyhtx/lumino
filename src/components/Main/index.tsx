@@ -6,7 +6,7 @@ import styles from './main.module.css';
 interface MainProps {
   children: ReactNode;
   className?: string;
-  center?: boolean;
+  justifyContent?: 'center' | 'start' | 'end' | 'between' | 'around' | 'evenly';
 }
 
 /**
@@ -14,10 +14,10 @@ interface MainProps {
  * @param {MainProps} props - Props for the Main component.
  * @returns {React.ReactElement} The Main component.
  */
-const Main: React.FC<MainProps> = ({ children, className, center }) => {
-  const styleCenter = center ? styles.center : '';
+const Main: React.FC<MainProps> = ({ children, className, justifyContent }) => {
+  const position = `justify-${(justifyContent ?? "center")}`;
   return (
-    <main className={classnames(styles.container, styleCenter, className)}>
+    <main className={classnames(styles.container, position, className)}>
       {children}
     </main>
   );

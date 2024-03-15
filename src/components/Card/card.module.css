@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 460px;
+  min-height: 300px;
   min-width: 410px;
   overflow: hidden;
   position: relative;
@@ -22,12 +22,12 @@
   will-change: transform;
 }
 
-.card .header {
+.header {
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 20px;
+  padding-bottom: 20px;
   text-align: center;
   text-decoration: none;
   line-height: 1.2;
@@ -36,7 +36,7 @@
   font-size: 24px;
 }
 
-.card .content {
+.content {
   --card-text-color: rgb(241, 245, 249);
   font-family: Inter-Light, Inter, Inter Placeholder, sans-serif;
   font-style: normal;

@@ -396,6 +396,25 @@ export const checkDataType = (data: unknown, type: string): boolean | undefined 
   return checkTypeofData(data, type)?.is;
 }
 
+//* COMPARE TYPES
+/**
+ * Compare types of two or more items.
+ * @param {...unknown[]} items - The items to compare.
+ * @returns {boolean} Returns true if all items have the same type, false otherwise.
+ */
+export const compareTypes = (...items: unknown[]): boolean => {
+  // Get the type of the first item
+  const firstType = typeof items[0];
+
+  // Compare the type of the first item with the types of the rest of the items
+  for (let i = 1; i < items.length; i++) {
+      if (typeof items[i] !== firstType) {
+          return false; // Return false if types are not equal
+      }
+  }
+
+  return true; // Return true if all types are equal
+}
 
 //* CHECK FOR ARRAY OF ARRAYS
 //? Checks if all items in an array are arrays

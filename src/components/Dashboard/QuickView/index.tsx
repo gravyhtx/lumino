@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "~/components/ui/tabs";
 import { classnames, titlecase } from "~/utils/global";
-import InfoCard from "./InfoCard";
+import InfoCard from "../Cards/InfoCard";
 import { CardSvg } from "../Cards/CardSvg";
 import styles from "./quickview.module.css";
 
@@ -19,9 +19,10 @@ type InfoCardsProps = {
   value?: [Amount, Amount, Amount, Amount];
   delta?: DeltaType;
   icon?: [ReactNode, ReactNode, ReactNode, ReactNode];
+  margin?: string;
 }
 
-const QuickView: React.FC<InfoCardsProps> = ({timeframe, title, value, delta}): JSX.Element => {
+const QuickView: React.FC<InfoCardsProps> = ({timeframe, title, value, delta, margin}): JSX.Element => {
   title = title ?? ['Total Revenue', 'Subscriptions', 'Transaction Quantity', 'Next Payout'];
   value = value ?? ['$45,231.89', '+2350', '+12,234', '+537'];
   const deltaObj = {
@@ -47,7 +48,7 @@ const QuickView: React.FC<InfoCardsProps> = ({timeframe, title, value, delta}): 
   console.log(CardSvg[0] as ReactNode)
 
   return(
-    <div style={{width: "100%", padding: "0 20px"}}>
+    <div style={{width: "100%", padding: "0 20px", margin}}>
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList style={{ backgroundColor: "#02041E", border: "1px solid rgba(255, 255, 255, .2)"}}>
           <TabsTrigger value="overview">

@@ -41,7 +41,7 @@ const InfoCard: React.ForwardRefExoticComponent<InfoCardProps | InfoCardPropsWit
   const cardIcon = typeof icon === 'string' ? <Icon name={icon as IconName} size={20} color="currentColor" /> : icon;
 
   return(
-    <Card ref={ref} aria-label={title}>
+    <Card ref={ref} aria-label={title} style={{ backgroundColor: "#02041E", border: "1px solid rgba(255, 255, 255, .2)"}}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">
           {title}
@@ -49,7 +49,7 @@ const InfoCard: React.ForwardRefExoticComponent<InfoCardProps | InfoCardPropsWit
         {cardIcon ?? svgEl}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">
+        <div className="text-2xl font-bold" style={{ color: "white"}}>
           {amount}
         </div>
         <p className="text-xs text-muted-foreground">
