@@ -1,7 +1,7 @@
 import React from 'react';
 import type { WidthProperty, HeightProperty } from '~/types/declarations/css.d.ts';
 import type { ExtendedCSSUnits } from '~/types/Units';
-import withAutoAnimate from '~/hoc/withAutoAnimate';
+// import withAutoAnimate from '~/hoc/withAutoAnimate';
 import { classnames } from '~/utils/global';
 import styles from './section.module.css';
 
@@ -99,4 +99,5 @@ const Section: React.FC<SectionProps> = ({
   );
 };
 
-export default withAutoAnimate(Section);
+// export default withAutoAnimate(Section);
+export default Section;

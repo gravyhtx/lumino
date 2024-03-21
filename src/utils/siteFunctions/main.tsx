@@ -326,8 +326,8 @@ export const getRegexData = (regex: ExtendedRegExp): ExtendedRegExp => {
 }
 
 //* GET NODE PROPERTIES
-type NodeProperties = Record<string, string | null>;
-type Accumulator = Record<string, string>
+// type NodeProperties = Record<string, string | null>;
+// type Accumulator = Record<string, string>
 /**
  * Takes a node and returns an object containing its properties.
  * @param {NodeProperties} node - The node to get the properties of.
@@ -339,16 +339,16 @@ type Accumulator = Record<string, string>
  * const nodeProperties = getNodeProperties(node);
  * console.log(nodeProperties); // Outputs an object like { id: "myDiv", class: "myClass", style: "color: red;" }
  */
-export const getNodeProperties = (node: NodeProperties): NodeProperties => {
-  const showProperties = Object.entries(node)
-    .filter(([_, value]) => value != null && value !== '')
-    .reduce((acc: Accumulator, [key, value]) => {
-      acc[key] = value!; // Non-null assertion used here
-      return acc;
-    }, {});
+// export const getNodeProperties = (node: NodeProperties): NodeProperties => {
+//   const showProperties = Object.entries(node)
+//     .filter(([_, value]) => value != null && value !== '')
+//     .reduce((acc: Accumulator, [key, value]) => {
+//       acc[key] = value!; // Non-null assertion used here
+//       return acc;
+//     }, {});
 
-  return showProperties;
-};
+//   return showProperties;
+// };
 
 //* GENERATE RANDOM WORDS FROM WORDS_LIST
 /**

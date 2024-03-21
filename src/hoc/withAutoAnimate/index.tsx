@@ -36,9 +36,9 @@ function withAutoAnimate<P extends object>(
     }, [combinedRef, props.autoAnimateConfig, config]);
 
     // Splitting autoAnimateConfig from the rest of the props
-    const { autoAnimateConfig, ...restProps } = props;
+    // const { autoAnimateConfig, ...restProps } = props;
 
-    return <WrappedComponent ref={combinedRef} {...restProps as P} />;
+    return <WrappedComponent ref={combinedRef} {...props as P} />;
   });
 
   WithAutoAnimate.displayName = `WithAutoAnimate(${getDisplayName(WrappedComponent)})`;
