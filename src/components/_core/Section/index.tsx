@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import type { WidthProperty, HeightProperty } from '~/types/declarations/css.d.ts';
 import type { ExtendedCSSUnits } from '~/types/Units';
-// import withAutoAnimate from '~/hoc/withAutoAnimate';
+import withAutoAnimate from '~/hoc/withAutoAnimate';
 import { classnames } from '~/utils/global';
 import styles from './section.module.css';
 
 type Align = 'center' | 'start' | 'end';
 
 interface SectionProps {
+  children?: React.ReactNode;
   layout?: 'row' | 'column';
   align?: Align | [horizontal: Align, vertical: Align];
   reverse?: boolean;
@@ -17,7 +18,10 @@ interface SectionProps {
   height?: HeightProperty<`${number}${ExtendedCSSUnits}`>;
   className?: string;
   style?: React.CSSProperties;
-  children?: React.ReactNode;
+}
+
+interface ExportedSectionProps extends SectionProps {
+  autoAnimate?: boolean;
 }
 
 /**
@@ -62,7 +66,8 @@ interface SectionProps {
  * </Section>
  */
 
-const Section: React.FC<SectionProps> = ({
+const Section = forwardRef<HTMLDivElement, SectionProps>(({
+  children,
   layout = 'column',
   align = 'center',
   reverse = false,
@@ -72,8 +77,7 @@ const Section: React.FC<SectionProps> = ({
   height,
   className,
   style,
-  children,
-}) => {
+}, ref) => {
   const flexDirection: string = layout + (reverse ? '-reverse' : '');
   const justifyContent: string = Array.isArray(align) ? (align[0] === 'center' ? 'center' : align[0] === 'start' ? 'flex-start' : 'flex-end') : 'center';
   const alignItems: string = Array.isArray(align) ? (align[1] === 'center' ? 'center' : align[1] === 'start' ? 'flex-start' : 'flex-end') : 'center';
@@ -93,11 +97,35 @@ const Section: React.FC<SectionProps> = ({
   const sectionClassNames: string = classnames(styles.wrapper, className);
 
   return (
-    <div className={sectionClassNames} style={combinedStyles}>
+    <div ref={ref} className={sectionClassNames} style={combinedStyles}>
       {children}
     </div>
   );
+
+  // const Output = () => (
+  //   <div className={sectionClassNames} style={combinedStyles}>
+  //     {children}
+  //   </div>
+  // );
+  // return autoAnimate ? withAutoAnimate(<Output/>) : <Output/>;
+});
+
+// export default Section;
+// export default withAutoAnimate(Section);
+
+Section.displayName = 'Section';
+
+// Wrap Section with autoAnimate HOC conditionally based on a prop
+const SectionWithAutoAnimate = withAutoAnimate(Section);
+
+const ExportedSection: React.FC<ExportedSectionProps> = (props) => {
+  const { autoAnimate, ...restProps } = props;
+  
+  if (autoAnimate) {
+    return <SectionWithAutoAnimate {...restProps} />;
+  } else {
+    return <Section {...restProps} />;
+  }
 };
 
-// export default withAutoAnimate(Section);
-export default Section;
+export default ExportedSection;

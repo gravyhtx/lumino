@@ -1,7 +1,7 @@
 import React from 'react';
 import SiteLink from '~/components/_core/SiteLink';
 import { classnames } from '~/utils/global';
-import { parseOpacityValue } from '~/utils/css';
+import { parseOpacityValue } from '~/utils/styles';
 import styles from './logo.module.css';
 import { LogoSvg } from './LogoSvg';
 

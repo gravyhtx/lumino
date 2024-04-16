@@ -1,3 +1,6 @@
+// ~/constants/node-properties.ts
+import type { NodeProperties } from "~/types/NodeProperties";
+
 //* ALL PROPERTIES ON A REACT NODE -- Use `console.dir` on `ref.current` to view these properties.
 //* NOTE: Use `getNodeProperties` in 'siteFunctions' to get all properties without returning keys with empty values.
 
@@ -7,8 +10,7 @@
 //?   console.dir(ref.current);
 //?   return <div ref={ref}>{children}</div>
 //? }
-
-const NODE_PROPERTIES = (node: Record<string, string[]>) => {
+const NODE_PROPERTIES = (node: NodeProperties) => {
   return {
     accessKey: node?.accessKey,
     align: node?.align,

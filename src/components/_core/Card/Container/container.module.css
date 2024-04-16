@@ -1,0 +1,18 @@
+.container {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex: none;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
+  height: 270px;
+  justify-content: center;
+  overflow: visible;
+  padding: 0;
+  position: absolute;
+  right: -12px;
+  top: 23px;
+  width: 374px;
+  z-index: 1;
+}

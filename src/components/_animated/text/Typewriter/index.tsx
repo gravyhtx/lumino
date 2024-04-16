@@ -3,17 +3,17 @@ import styles from "../animated-text.module.css";
 
 type TypewriterProps = {
   text?: string;
-  speed?: number;
   blinkingCursor?: boolean;
+  ms?: number;
 };
 
-const Typewriter = ({ text: initialText = "", blinkingCursor = false, speed = 25, ...props }: TypewriterProps) => {
+const Typewriter = ({ text: initialText = "", blinkingCursor = false, ms = 25, ...props }: TypewriterProps) => {
   const [text, setText] = useState<string>(initialText);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setText(initialText.slice(0, text.length + 1));
-    }, speed);
+    }, ms);
 
     return () => clearTimeout(timeout);
   }, [initialText, text]);

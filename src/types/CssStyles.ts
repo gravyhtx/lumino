@@ -1,3 +1,4 @@
+// ~/types/CssStyles.ts
 import type { ColorString } from "./Color";
 import type { BorderSize } from "./Units";
 

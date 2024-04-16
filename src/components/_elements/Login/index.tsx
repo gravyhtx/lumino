@@ -1,8 +1,8 @@
 import React from "react";
-import Card from "../Card";
-import { Submit } from "../_core/ReactHookForm";
+import Card from "../../card";
+import { Submit } from "../../_core/ReactHookForm";
 import styles from "./login.module.css";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 
 type LoginProps = {
   onclick?: () => void;

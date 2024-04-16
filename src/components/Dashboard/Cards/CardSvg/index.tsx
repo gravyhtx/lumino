@@ -1,4 +1,4 @@
-const SvgA = () => {
+const SvgA = (): JSX.Element => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +15,7 @@ const SvgA = () => {
   )
 }
 
-const SvgB = () => {
+const SvgB = (): JSX.Element => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +34,7 @@ const SvgB = () => {
   )
 }
 
-const SvgC = () => {
+const SvgC = (): JSX.Element => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ const SvgC = () => {
   )
 }
 
-const SvgD = () => {
+const SvgD = (): JSX.Element => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

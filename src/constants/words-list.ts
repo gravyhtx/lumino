@@ -1,3 +1,4 @@
+// ~/constants/words-list.ts
 /**
  * A list of words parsed from a JSON string. 
  * This list contains a series of strings that represent individual words.

@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
+import type { Days, Months } from "~/types/DateTime";
 
 //?|[ GLOBAL TYPES ]|?//
 interface DateObject {
   month: number;
   day: number;
   year: number;
+}
+
+type DateTime = number | Date;
+
+interface TimeZoneData {
+  code: string | undefined;
+  coordinates: string | undefined;
+  tz: string | undefined;
+  comments?: string;
 }
 
 //?|[ GLOBAL CONSTANTS ]|?//
@@ -76,6 +86,36 @@ export const getDay = (leadingZeros?: boolean): string => {
  */
 export const dayInYear = (d: Date): number => Math.floor((d.getTime() - new Date(d.getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
 
+//* GET CURRENT DAY OF THE WEEK
+/**
+ * An array of day names.
+ * @type {Array<Days>}
+ */
+export const day: Days[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+//* GET CURRENT DAY OF THE WEEK
+/**
+ * An array of month names.
+ * @type {Array<Months>}
+ */
+export const month: Months[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+//* GET INDEX OF A GIVEN MONTH
+/**
+ * Retrieves the month number based on the month name.
+ * @param {Months} name - The name of the month.
+ * @returns {number} The month number (1-12).
+ */
+export const monthNumber = (name: Months) => month.indexOf(name) + 1;
+
+//* GET NUMBER OF DAYS IN A SPECIFIC MONTH
+/**
+ * Calculates the number of days in a specific month.
+ * @param {Months} month - The name of the month.
+ * @param {number} year - The year.
+ * @returns {number} The number of days in the specified month/year.
+ */
+export const daysInMonth = (month: Months, year: number) => new Date(year, monthNumber(month), 0).getDate();
 
 //* GET HOURS/MINUTES IN CALCULATION OR MILITARY TIME
 /**
@@ -221,6 +261,22 @@ export const formatDate = (
   };
 };
 
+//* FORMAT DATE BASED ON 'FORMAT' INPUT
+/**
+ * Simplified date formatting to convert a date string or timestamp into a human-readable format.
+ *
+ * @param {string | number} input - The date string or timestamp.
+ * @returns {string} - The formatted date string.
+ */
+export function quickFormatDate(input: string | number | Date): string {
+  const date = new Date(input);
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 
 //* CHECK IF AN OBJECT IS A "DATE OBJECT" -- { month: number, day: number, year: number }
 /**
@@ -287,7 +343,6 @@ export const valiDate = (
   
 };
 
-
 //* CHECK IF DATE MATCHES TODAY'S DATE
 /**
  * Checks if the given date matches today's date.
@@ -313,12 +368,11 @@ export const isToday = (inputDate: Date | string | number | undefined): boolean 
   return inputDateTime.getTime() === todayIs.getTime();
 };
 
-
 //* GET THE AMOUNT OF TIME PASSED FROM A TIMESTAMP
 /**
  * Calculates the amount of time passed between two dates.
- * @param {number|Date} date - The date to compare.
- * @param {number|Date} [reference] - The reference date to compare against. Defaults to the current date.
+ * @param {DateTime} date - The date to compare.
+ * @param {DateTime} [reference] - The reference date to compare against. Defaults to the current date.
  * @returns {object} An object containing the difference in milliseconds, seconds, minutes, hours, days, weeks, months, and years.
  * @example
  * timePassed(1592024400000); //=> { ms: 1592024400000, s: 1592024400, min: 26533740, hr: 442229, d: 18426, wk: 2632, mo: 60, yr: 5.01 }
@@ -326,8 +380,8 @@ export const isToday = (inputDate: Date | string | number | undefined): boolean 
  * timePassed(new Date(1592024400000), new Date(1592024401000)); //=> { ms: 1000, s: 1, min: 0, hr: 0, d: 0, wk: 0, mo: 0, yr: 0 }
  */
 export const timePassed = (
-  date: number | Date,
-  reference: number | Date = new Date().getTime()
+  date: DateTime,
+  reference: DateTime = new Date().getTime(),
 ): object => {
   date = typeof date === 'number' ? new Date(date) : date;
   const timestamp = date.getTime();
@@ -371,13 +425,18 @@ export const timePassed = (
   return { deltaTime, string }
 };
 
+/**
+ * Calculates the number of days between two dates.
+ * @param {Date} date1 The first date.
+ * @param {Date} [date2=today] The second date. Defaults to the current date.
+ * @returns {number} The number of days between the two dates.
+ * @example
+ * const date1 = new Date('2023-06-23');
+ * const date2 = new Date('2023-06-30');
+ * daysSince(date1, date2); //=> 7
+ */
+export const daysBetween = (date1: Date, date2: Date = new Date()) => Math.floor(Math.abs(date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24));
 
-interface TimeZoneData {
-  code: string | undefined;
-  coordinates: string | undefined;
-  tz: string | undefined;
-  comments?: string;
-}
 /**
  * Asynchronously fetches and sets time zone data.
  * @returns {object} Contains the current date and a list of time zones.

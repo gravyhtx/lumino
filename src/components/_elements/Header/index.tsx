@@ -1,7 +1,7 @@
 // components/Header.tsx
 import React, { useState } from 'react';
 import Icon from '~/components/_core/Icon';
-import Logo from '../_elements/Logo';
+import Logo from '../Logo';
 import { classnames } from '~/utils/global';
 import styles from './header.module.css';
 

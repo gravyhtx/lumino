@@ -1,9 +1,10 @@
 import React from 'react';
 import type { ReactNode } from 'react';
-import Main from '~/components/Main';
+import Main from '~/components/_core/Main';
 import styles from './dashboard.module.css';
-import { classnames, marginClass } from '~/utils/global';
+import { classnames } from '~/utils/global';
 import Logo from '~/components/_elements/Logo';
+import { marginClass } from '~/utils/styles';
 
 interface DashboardProps {
   children: ReactNode;

@@ -1,3 +1,4 @@
+// ~/constants/unicode.ts
 export const APPLE = {
   logo: '\uF8FF',
   shift: '\u21E7',

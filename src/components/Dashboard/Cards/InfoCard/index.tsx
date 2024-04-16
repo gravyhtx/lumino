@@ -18,7 +18,7 @@ type InfoCardPropsWithIconName = {
   icon: IconName;
 }
 
-const InfoCard: React.ForwardRefExoticComponent<InfoCardProps | InfoCardPropsWithIconName> = forwardRef<HTMLDivElement, InfoCardProps | InfoCardPropsWithIconName>(({
+export const InfoCard: React.ForwardRefExoticComponent<InfoCardProps | InfoCardPropsWithIconName> = forwardRef<HTMLDivElement, InfoCardProps | InfoCardPropsWithIconName>(({
   title,
   amount,
   timeSince,
@@ -59,5 +59,3 @@ const InfoCard: React.ForwardRefExoticComponent<InfoCardProps | InfoCardPropsWit
     </Card>
   )
 });
-
-export default InfoCard;

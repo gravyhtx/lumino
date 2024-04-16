@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "~/components/ui/tabs";
 import { classnames, titlecase } from "~/utils/global";
-import InfoCard from "../Cards/InfoCard";
-import { CardSvg } from "../Cards/CardSvg";
+// import {InfoCard} from "../Cards/InfoCard";
+import { CardSvg, InfoCard } from "../Cards";
 import styles from "./quickview.module.css";
 
 type Timeframes = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year';
@@ -21,7 +21,7 @@ type InfoCardsProps = {
   margin?: string;
 }
 
-const QuickView: React.FC<InfoCardsProps> = ({title, value, delta, margin}): JSX.Element => {
+export const QuickView: React.FC<InfoCardsProps> = ({title, value, delta, margin}): JSX.Element => {
   title = title ?? ['Total Revenue', 'Subscriptions', 'Transaction Quantity', 'Next Payout'];
   value = value ?? ['$45,231.89', '+2350', '+12,234', '+537'];
   const deltaObj = {

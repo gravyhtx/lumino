@@ -1,20 +1,52 @@
-import type { APIErrorResponse, Documents } from '~/schema';
-
+// import type { APIErrorResponse } from '~/schema';
+import type { BoardingApplicationsResponse, ViewBoardingApplication } from '~/types/_maverick';
 export * from './helpers';
+
+export const getGHLAuth = async (): Promise<unknown> => {
+  const response = await fetch('/api/oauth/init');
+  if (!response.ok) {
+    console.log('error')
+    throw new Error('Failed to fetch boarding applications');
+  }
+  console.log(response.json() as Promise<unknown>)
+  return response.json() as Promise<unknown>;
+};
 
 /**
  * Fetch documents for a specific boarding application from the Next.js API route.
- * @param applicationId - The ID of the boarding application.
  * @returns A promise that resolves with the documents data.
  */
-export const fetchBoardingAppDocuments = async (applicationId: string): Promise<Documents> => {
-  const response = await fetch(`/api/boarding-applications/${applicationId}/documents`);
-
+export const getBoardingApplications = async (): Promise<BoardingApplicationsResponse> => {
+  const response = await fetch('/api/boarding-applications');
   if (!response.ok) {
-    const errorData = await response.json() as APIErrorResponse;
-    throw new Error(errorData.message);
+    throw new Error('Failed to fetch boarding applications');
   }
+  return response.json() as Promise<BoardingApplicationsResponse>;
+};
 
-  const documents = await response.json() as Documents;
-  return documents;
+export const viewBoardingApplication = async (applicationId: string): Promise<ViewBoardingApplication> => {
+  const response = await fetch(`/api/boarding-applications/${applicationId}`);
+  console.log(response)
+  if (!response.ok) {
+    throw new Error('Failed to fetch payments');
+  }
+  return response.json() as Promise<ViewBoardingApplication>;
+};
+
+export const getPayments = async (): Promise<ViewBoardingApplication> => {
+  const response = await fetch(`/api/payments`);
+  console.log(response)
+  if (!response.ok) {
+    throw new Error('Failed to fetch payments');
+  }
+  return response.json() as Promise<ViewBoardingApplication>;
+};
+
+export const getCustomerVault = async (): Promise<ViewBoardingApplication> => {
+  const response = await fetch(`/api/customer-vault`);
+  console.log(response)
+  if (!response.ok) {
+    throw new Error('Failed to fetch payments');
+  }
+  return response.json() as Promise<ViewBoardingApplication>;
 };

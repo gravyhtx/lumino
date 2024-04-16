@@ -1,3 +1,4 @@
+// ~/types/Units.ts
 import type { HeightProperty, WidthProperty } from "./declarations/css";
 
 // CSS Unit Classifications //
@@ -13,9 +14,13 @@ export type DynamicViewportUnits = DynamicUnits | 'dvb' | 'dvi';
 export type StandardUnits = AbsoluteUnits | RelativeUnits | DynamicUnits;
 export type ViewportUnits = StandardViewportUnits | LargeViewportUnits | SmallViewportUnits | DynamicViewportUnits;
 export type ExtendedUnits = StandardUnits | ViewportUnits;
+export type GridLengthUnit = 'fr';
+export type GridUnits = AbsoluteUnits | RelativeUnits | GridLengthUnit;
+export type FlexUnits = AbsoluteUnits | RelativeUnits;
+export type LayoutUnits = GridUnits | FlexUnits;
 export type BasicAbsoluteUnits = 'px' | 'pt';
 export type BasicStaticUnits = 'px' | 'pt' | 'em' | 'rem';
-export type BasicRelativeUnits = '%' | 'vw' | 'dvw' | 'vh' | 'dvh'
+export type BasicRelativeUnits = '%' | 'vw' | 'dvw' | 'vh' | 'dvh';
 export type BasicCSSUnits = BasicStaticUnits | BasicRelativeUnits;
 export type ExtendedCSSUnits = AbsoluteUnits | RelativeUnits | DynamicUnits | StaticUnits | ExtendedRelativeUnits | StandardViewportUnits | LargeViewportUnits | SmallViewportUnits | DynamicViewportUnits | BasicCSSUnits;
 

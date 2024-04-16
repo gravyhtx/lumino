@@ -7,6 +7,7 @@ interface CloseButtonProps {
   padding?: number | string;
   verticalOffset?: number | string;
   horizontalOffset?: number | string;
+  label?: string;
 }
 
 /**
@@ -19,6 +20,7 @@ const CloseButton: React.FC<CloseButtonProps> = forwardRef<HTMLDivElement, Close
   padding = 0,
   verticalOffset = 0,
   horizontalOffset = 0,
+  label = 'Close',
 }, ref) => {
   const containerStyle: React.CSSProperties = {
     position: 'absolute',
@@ -28,7 +30,7 @@ const CloseButton: React.FC<CloseButtonProps> = forwardRef<HTMLDivElement, Close
   };
 
   return (
-    <div aria-label={'Close'} role='button' style={containerStyle} ref={ref}>
+    <div aria-label={label} role='button' style={containerStyle} ref={ref}>
       <Icon name={iconName??"XCircle"} size={24} />
     </div>
   );

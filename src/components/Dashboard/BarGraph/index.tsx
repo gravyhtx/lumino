@@ -206,5 +206,3 @@ export const BarGraph: React.FC<BarGraphProps> = ({
     </ResponsiveContainer>
   );
 };
-
-export default BarGraph;

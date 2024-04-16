@@ -1,5 +1,4 @@
-// import { Character, Letter, Number } from "./Characters";
-// import { Globals } from "./declarations/css";
+// ~/types/Color.ts
 import type { CSS_COLOR_NAMES } from '~/constants/css-color-names';
 
 // HSL + HSLA  Colors

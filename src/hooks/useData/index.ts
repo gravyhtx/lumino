@@ -80,6 +80,7 @@ function useData<T>(originalData: T[] | Record<string, T>, shouldClone = false) 
   
     return result;
   }, []);
+  
   /**
    * Maps each element in an array to a new structure defined by a callback function.
    * 

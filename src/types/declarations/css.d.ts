@@ -1,8 +1,9 @@
+//  ~/types/declarations/css.d.ts
 // https://use-form.netlify.app/modules/_node_modules_csstype_index_d_.html#fontfacefontstyleproperty
 import type { AllColorStrings } from "../Color";
 import type { AbsoluteSize } from "../Units";
 
-export type Globals = "-moz-initial" | "inherit" | "initial" | "revert" | "unset";
+export type Globals = "-moz-initial" | "inherit" | "initial" | "revert" | "revert-layer" | "unset";
 export type HtmlAttributes = "[-webkit-dropzone]" | "[-webkit-slot]" | "[abbr]" | "[accept-charset]" | "[accept]" | "[accesskey]" | "[action]" | "[align]" | "[alink]" | "[allow]" | "[allowfullscreen]" | "[allowpaymentrequest]" | "[alt]" | "[archive]" | "[async]" | "[autobuffer]" | "[autocapitalize]" | "[autocomplete]" | "[autofocus]" | "[autoplay]" | "[axis]" | "[background]" | "[behavior]" | "[bgcolor]" | "[border]" | "[bottommargin]" | "[buffered]" | "[cellpadding]" | "[cellspacing]" | "[char]" | "[charoff]" | "[charset]" | "[checked]" | "[cite]" | "[class]" | "[classid]" | "[clear]" | "[code]" | "[codebase]" | "[codetype]" | "[color]" | "[cols]" | "[colspan]" | "[command]" | "[compact]" | "[content]" | "[contenteditable]" | "[contextmenu]" | "[controls]" | "[coords]" | "[crossorigin]" | "[data]" | "[datafld]" | "[datasrc]" | "[datetime]" | "[declare]" | "[decoding]" | "[default]" | "[defer]" | "[dir]" | "[direction]" | "[disabled]" | "[download]" | "[draggable]" | "[dropzone]" | "[enctype]" | "[exportparts]" | "[face]" | "[for]" | "[form]" | "[formaction]" | "[formenctype]" | "[formmethod]" | "[formnovalidate]" | "[formtarget]" | "[frame]" | "[frameborder]" | "[headers]" | "[height]" | "[hidden]" | "[high]" | "[href]" | "[hreflang]" | "[hspace]" | "[http-equiv]" | "[icon]" | "[id]" | "[inputmode]" | "[integrity]" | "[intrinsicsize]" | "[is]" | "[ismap]" | "[itemid]" | "[itemprop]" | "[itemref]" | "[itemscope]" | "[itemtype]" | "[kind]" | "[label]" | "[lang]" | "[language]" | "[leftmargin]" | "[link]" | "[longdesc]" | "[loop]" | "[low]" | "[manifest]" | "[marginheight]" | "[marginwidth]" | "[max]" | "[maxlength]" | "[mayscript]" | "[media]" | "[method]" | "[methods]" | "[min]" | "[minlength]" | "[moz-opaque]" | "[mozallowfullscreen]" | "[mozbrowser]" | "[mozcurrentsampleoffset]" | "[msallowfullscreen]" | "[multiple]" | "[muted]" | "[name]" | "[nohref]" | "[nomodule]" | "[noresize]" | "[noshade]" | "[novalidate]" | "[nowrap]" | "[object]" | "[onafterprint]" | "[onbeforeprint]" | "[onbeforeunload]" | "[onblur]" | "[onerror]" | "[onfocus]" | "[onhashchange]" | "[onlanguagechange]" | "[onload]" | "[onmessage]" | "[onoffline]" | "[ononline]" | "[onpopstate]" | "[onredo]" | "[onresize]" | "[onstorage]" | "[onundo]" | "[onunload]" | "[open]" | "[optimum]" | "[part]" | "[ping]" | "[placeholder]" | "[played]" | "[poster]" | "[prefetch]" | "[preload]" | "[profile]" | "[prompt]" | "[radiogroup]" | "[readonly]" | "[referrerPolicy]" | "[referrerpolicy]" | "[rel]" | "[required]" | "[rev]" | "[reversed]" | "[rightmargin]" | "[rows]" | "[rowspan]" | "[rules]" | "[sandbox-allow-modals]" | "[sandbox-allow-popups-to-escape-sandbox]" | "[sandbox-allow-popups]" | "[sandbox-allow-presentation]" | "[sandbox-allow-storage-access-by-user-activation]" | "[sandbox-allow-top-navigation-by-user-activation]" | "[sandbox]" | "[scope]" | "[scoped]" | "[scrollamount]" | "[scrolldelay]" | "[scrolling]" | "[selected]" | "[shape]" | "[size]" | "[sizes]" | "[slot]" | "[span]" | "[spellcheck]" | "[src]" | "[srcdoc]" | "[srclang]" | "[srcset]" | "[standby]" | "[start]" | "[style]" | "[summary]" | "[tabindex]" | "[target]" | "[text]" | "[title]" | "[topmargin]" | "[translate]" | "[truespeed]" | "[type]" | "[typemustmatch]" | "[usemap]" | "[valign]" | "[value]" | "[valuetype]" | "[version]" | "[vlink]" | "[volume]" | "[vspace]" | "[webkitallowfullscreen]" | "[width]" | "[wrap]" | "[xmlns]";
 export type AtRules = "@charset" | "@counter-style" | "@document" | "@font-face" | "@font-feature-values" | "@import" | "@keyframes" | "@media" | "@namespace" | "@page" | "@supports" | "@viewport"
 
@@ -36,13 +37,6 @@ export type BackgroundColorProperty = Globals | AllColorStrings;
 
 // Background Properties
 export type BackgroundImageProperty = Globals | "none";
-
-// Flex
-export type FlexBasisProperty<TLength> = Globals | TLength | "-moz-max-content" | "-moz-min-content" | "-webkit-auto" | "auto" | "available" | "content" | "fit-content" | "max-content" | "min-content";
-export type FlexDirectionProperty = Globals | "column" | "column-reverse" | "row" | "row-reverse";
-export type FlexFlowProperty = Globals | "column" | "column-reverse" | "nowrap" | "row" | "row-reverse" | "wrap" | "wrap-reverse"
-export type FlexProperty<TLength> = Globals | TLength | "auto" | "available" | "content" | "fit-content" | "max-content" | "min-content" | "none" | number;
-export type FlexWrapProperty = Globals | "nowrap" | "wrap" | "wrap-reverse";
 
 
 // Sizing
@@ -106,3 +100,42 @@ export type ConvertLengthUnitArgsOptions = {
   viewWidth?: Unit<'px'>;
   viewHeight?: Unit<'px'>;
 };
+
+// Breakpoints
+export type Breakpoint = 'default' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+// Grid + Flex Layout
+export type GridTemplateEntry = number | string | [number, string][];
+export type GridAutoFlow = 'row' | 'col' | 'row-dense' | 'col-dense';
+export type FlexDirection = 'row' | 'row-reverse' | 'col' | 'col-reverse';
+export type FlexWrap = 'wrap' | 'wrap-reverse' | 'nowrap';
+export type JustifyAlignPlacement =
+  | 'start'
+  | 'end'
+  | 'center'
+  | 'between'
+  | 'around'
+  | 'evenly'
+  | 'stretch'
+  | 'baseline';
+
+// Grid Properties
+export type GridAutoColumnsProperty<TLength> = Globals | TLength | 'min-content' | 'max-content' | 'auto' | 'fit-content';
+export type GridAutoRowsProperty<TLength> = Globals | TLength | 'min-content' | 'max-content' | 'auto' | 'fit-content';
+export type GridAutoFlowProperty = Globals | 'row' | 'column' | 'dense' | 'row-dense' | 'column-dense';
+export type GridTemplateColumnsProperty<TLength> = Globals | 'none' | 'subgrid' | GridTrackSize<TLength>[] | `repeat(${number}, ${GridTrackSize<TLength>})`;
+export type GridTemplateRowsProperty<TLength> = Globals | 'none' | 'subgrid' | GridTrackSize<TLength>[] | `repeat(${number}, ${GridTrackSize<TLength>})`;
+export type GridTrackSize<TLength> =
+  | TLength
+  | 'min-content'
+  | 'max-content'
+  | 'auto'
+  | 'fit-content'
+  | '1fr';
+
+// Flex Properties
+export type FlexBasisProperty<TLength> = Globals | TLength | "-moz-max-content" | "-moz-min-content" | "-webkit-auto" | "auto" | "available" | "content" | "fit-content" | "max-content" | "min-content";
+export type FlexDirectionProperty = Globals | "column" | "column-reverse" | "row" | "row-reverse";
+export type FlexFlowProperty = Globals | "column" | "column-reverse" | "nowrap" | "row" | "row-reverse" | "wrap" | "wrap-reverse";
+export type FlexProperty<TLength> = Globals | TLength | "auto" | "available" | "content" | "fit-content" | "max-content" | "min-content" | "none" | number;
+export type FlexWrapProperty = Globals | "nowrap" | "wrap" | "wrap-reverse";

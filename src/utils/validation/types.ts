@@ -1,12 +1,18 @@
 import { isValidElement } from 'react';
 // import { isJsonObject, isJsonString } from '../../helpers/jsonHelpers';
 import { isJsonObject, isJsonString } from '../json';
+import type { TypesList } from '../types/validation';
 
 //* CHECK VARIABLE TYPES
-// Uses various methods to check if the given 'element' matches a 'type' (string)
+/**
+ * Checks if the given 'variable' matches the specified type.
+ * @param {unknown} variable - The variable to check the type of.
+ * @param {string} [varType=''] - The type to compare against.
+ * @returns {{is: boolean, type: string}} An object indicating whether the variable matches the type and the actual type of the variable.
+ */
 export const checkTypeof = (
-  variable: unknown = undefined,
-  varType = ''
+  variable: unknown,
+  varType: TypesList | '' = ''
 ): { is: boolean, type: string } => {
 
   //? Set Output
@@ -38,7 +44,7 @@ export const checkTypeof = (
       ? output = {is: true, type: "arrays"}
 
     //? ARRAY = TRUE
-    : type && type === "array" && Array.isArray(variable)
+    : type && type === "array" && (Array.isArray(variable) || Object.prototype.toString.call(variable) === '[object Array]')
 
       ? output = {is: true, type: "array"}
 
@@ -187,7 +193,7 @@ export const checkTypeof = (
 //?   Array = "array"
 //?   Arrays (array of arrays) = "arrays"
 //?   Arrays (has arrays) = "hasarrays"
-//?   Boolean = "boolean"
+//?   Boolean = "boolean"aa
 //?   Number = "number"
 //?   Number (as "string") = "numberstring"
 //?   BigInt = "bigint"
@@ -210,82 +216,33 @@ export const checkTypeof = (
 //?   Any other object = "object"
 
 //* CHECK VARIABLE TYPES -- SHORTCUT!!!
-export const checkType = (variable: unknown, type: string | false): boolean | { is: boolean; type: string; } | undefined => {
+/**
+ * Checks if the given 'variable' matches the specified 'type' (shortcut version).
+ * @param {unknown} variable - The variable to check the type of.
+ * @param {string | false} type - The type to compare against (shortcut version).
+ * @returns {boolean | {is: boolean, type: string} | undefined} A boolean indicating whether the variable matches the type, an object with type information, or undefined if no type is provided.
+ */
+export const checkType = (variable: unknown, type: TypesList | false): boolean | { is: boolean; type: string; } | undefined => {
   variable = !variable ? false : variable;
-  type = !type ? false : typeof type === 'string' && type.replace(/\s+/g, '').toLowerCase().trim();
-  //?  'Type' shortcuts
-  if(type === 's' || type === 'str') {
-    type = 'string'
-  }
-  if(type === 'o' || type === 'obj' || type ==='{}') {
-    type = 'object'
-  }
-  if(type === 'a' || type === 'arr' || type === '[]') {
-    type = 'array'
-  }
-  if(type === 'multiarr' || type === 'multiarray' || type === 'arrs' || type === '[[]]') {
-    type = 'arrays'
-  }
-  if(type === 'f' || type === 'fun' || type === 'func') {
-    type = 'function'
-  }
-  if(type === 'b' || type === 'bool' || type === '?') {
-    type = 'boolean'
-  }
-  if(type === 'n' || type === 'num') {
-    type = 'number'
-  }
-  if(type === 'ns' || type === 'numstr') {
-    type = 'numberstring'
-  }
-  if(type === 'big') {
-    type = 'bigint'
-  }
-  if(type === 'd') {
-    type = 'date'
-  }
-  if(type === 'p' || type === 'percent' || type === '%') {
-    type = 'percentage'
-  }
-  if(type === 'sym') {
-    type = 'symbol'
-  }
-  if(type === 'u' || type === 'und' || type === 'ud') {
-    type = 'undefined'
-  }
-  if(type === 'e' || type === 'el') {
-    type = 'element'
-  }
-  if(type === '<>') {
-    type = 'node'
-  }
-  if(type === 'img') {
-    type = 'image'
-  }
-  if(type === 'jsonobj') {
-    type = 'jsonobject'
-  }
-  if(type === 'jsonstr') {
-    type = 'jsonstring'
-  }
-  if(type === 'rbgobj') {
-    type = 'rgbobject'
-  }
-  if(type === 'rbgarr') {
-    type = 'rgbarray'
-  }
+  type = typeShortcuts(type);
 
   return type !== false && variable !== false
     ? checkTypeof(variable, type).is
-  : type === false && variable !== false
+    : type === false && variable !== false
     ? checkTypeof(variable)
-  : !type && !variable
+    : !type && !variable
     ? undefined
-  : { is: false, type: '' };
-}
+    : { is: false, type: '' };
+};
 
 
 //* CHECK DATA TYPES
+/**
+ * Checks if the given 'data' matches the specified 'type'.
+ * @param {unknown} data - The data to check the type of.
+ * @param {string} [type] - The type to compare against.
+ * @returns {{is: boolean, type: string} | undefined} An object indicating whether the data matches the type and the actual type of the data, or undefined if the type is not recognized.
+ */
 export const checkTypeofData = (data: unknown, type?: string): { is: boolean; type: string; } | undefined => {
   //? Convert type to lowercase
   type = type?.toString().replace(/\s+/g, '').toLowerCase().trim() ?? undefined;
@@ -385,6 +342,12 @@ export const checkTypeofData = (data: unknown, type?: string): { is: boolean; ty
 
 
 //* CHECK DATA TYPES -- SHORTCUT!!!
+/**
+ * Checks if the given 'data' matches the specified 'type' (shortcut version).
+ * @param {unknown} data - The data to check the type of.
+ * @param {string} type - The type to compare against (shortcut version).
+ * @returns {boolean | undefined} A boolean indicating whether the data matches the type, or undefined if the type is not recognized.
+ */
 export const checkDataType = (data: unknown, type: string): boolean | undefined => {
   type = !type ? '' : type.replace(/\s+/g, '').toLowerCase().trim();
   if (type === 'multipart/form-data' || type === 'multipartform') {
@@ -417,18 +380,33 @@ export const compareTypes = (...items: unknown[]): boolean => {
 }
 
 //* CHECK FOR ARRAY OF ARRAYS
-//? Checks if all items in an array are arrays
-export const isArrayOfArrays = (arr: unknown): boolean => 
+/**
+ * Checks if all items in an array are arrays.
+ * @param {unknown} arr - The array to check.
+ * @returns {arr is unknown[][]} Returns true if all items in the array are arrays, false otherwise.
+ */
+export const isArrayOfArrays = (arr: unknown): arr is unknown[][] =>
   Array.isArray(arr) && arr.every((item): item is unknown[] => Array.isArray(item));
 
-
 //* CHECK FOR AT LEAST ONE ARRAY IN AN ARRAY
-//? Checks if some of the items in an array are arrays
-export const hasArrays = (arr: unknown): boolean => arr && Array.isArray(arr) ? arr.some(item => Array.isArray(item)) : false;
+/**
+ * Checks if any of the items in an array are arrays.
+ * @param {unknown} arr - The array to check.
+ * @returns {boolean} Returns true if some of the items in the array are arrays, false otherwise.
+ */
+export const hasArrays = (arr: unknown): boolean =>
+  Array.isArray(arr) && arr.some((item) => Array.isArray(item));
 
 
 //* CHECK IF STRING IS A VALID URL
-//? Checks if a URL is valid. Includes checks for protocol (http/https) requirements in 'options'.
+/**
+ * Checks if a URL is valid.
+ * @param {string} urlString - The URL string to check.
+ * @param {Object} [options] - Additional options for URL validation.
+ * @param {boolean} [options.requireProtocol=false] - Specifies whether the URL requires a protocol (http/https).
+ * @param {boolean} [options.requireHttps=false] - Specifies whether the URL requires HTTPS protocol.
+ * @returns {boolean} Returns true if the URL is valid, false otherwise.
+ */
 export const isValidUrl = (
   urlString: string,
   options: {
@@ -469,6 +447,11 @@ export const isValidUrl = (
 }
 
 //* CHECK IF INPUT IS A FUNCTION
+/**
+ * Checks if the input is a function.
+ * @param {unknown} input - The input to check.
+ * @returns {boolean} Returns true if the input is a function, false otherwise.
+ */
 export const isFunction = (input: unknown): boolean => {
   // Check if input is a function
   if (typeof input === "function") {
@@ -488,6 +471,11 @@ export const isFunction = (input: unknown): boolean => {
 };
 
 //* CHECK IF STRING IS VALID URL
+/**
+ * Checks if a string is a valid URL.
+ * @param {string} str - The string to check.
+ * @returns {boolean} Returns true if the string is a valid URL, false otherwise.
+ */
 export function isUrl(str: string): boolean {
   try {
     new URL(str);
@@ -495,4 +483,98 @@ export function isUrl(str: string): boolean {
   } catch (e) {
     return false;
   }
+}
+
+//* TYPE SHORTCUTS
+/**
+ * Converts type shortcuts to full type names.
+ * @param {string} type - The type to convert.
+ * @returns {string} The full type name.
+ */
+const typeShortcuts = (type: TypesList | false) => {
+  type = !type ? false : type;
+  if (typeof type === 'string') {
+    switch (type) {
+      case 's':
+      case 'str':
+        type = 'string';
+        break;
+      case 'o':
+      case 'obj':
+      case '{}':
+        type = 'object';
+        break;
+      case 'a':
+      case 'arr':
+      case '[]':
+        type = 'array';
+        break;
+      case 'multiarr':
+      case 'multiarray':
+      case 'arrs':
+      case '[[]]':
+        type = 'arrays';
+        break;
+      case 'f':
+      case 'fun':
+      case 'func':
+        type = 'function';
+        break;
+      case 'b':
+      case 'bool':
+      case '?':
+        type = 'boolean';
+        break;
+      case 'n':
+      case 'num':
+        type = 'number';
+        break;
+      case 'ns':
+      case 'numstr':
+        type = 'numberstring';
+        break;
+      case 'big':
+        type = 'bigint';
+        break;
+      case 'd':
+        type = 'date';
+        break;
+      case 'p':
+      case 'percent':
+      case '%':
+        type = 'percentage';
+        break;
+      case 'sym':
+        type = 'symbol';
+        break;
+      case 'u':
+      case 'und':
+      case 'ud':
+        type = 'undefined';
+        break;
+      case 'e':
+      case 'el':
+        type = 'element';
+        break;
+      case '<>':
+        type = 'node';
+        break;
+      case 'img':
+        type = 'image';
+        break;
+      case 'jsonobj':
+        type = 'jsonobject';
+        break;
+      case 'jsonstr':
+        type = 'jsonstring';
+        break;
+      case 'rbgobj':
+        type = 'rgbobject';
+        break;
+      case 'rbgarr':
+        type = 'rgbarray';
+        break;
+    }
+  }
+  return type;
 }

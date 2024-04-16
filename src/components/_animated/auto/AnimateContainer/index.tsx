@@ -1,17 +1,23 @@
-import React from 'react';
-import type { HTMLAttributes } from 'react';
+import React, { type ComponentProps } from 'react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 
-type Props = {
+type Props<C extends React.ElementType> = {
   children: React.ReactNode;
-} & HTMLAttributes<HTMLDivElement>; // Add HTMLAttributes type
+  as?: C;
+} & ComponentProps<C>;
 
-const AnimateContainer = ({ children, ...props }: Props) => {
+const AnimateContainer = <C extends React.ElementType = 'div'>({
+  children,
+  as,
+  ...props
+}: Props<C>) => {
   const [animationParent] = useAutoAnimate();
+  const Component = String(as ?? 'div');
+
   return (
-    <div ref={animationParent} {...props}>
+    <Component ref={animationParent} {...(props as ComponentProps<C>)}>
       {children}
-    </div>
+    </Component>
   );
 };
 

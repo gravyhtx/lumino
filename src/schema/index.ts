@@ -1,72 +1,77 @@
-import { z } from 'zod';
+export * from './client';
+export * from './customer';
+export * from './subscription';
+export * from './transaction';
 
-export const attachmentSchema = z.object({
-  id: z.number(),
-});
+// import { z } from 'zod';
 
-export const principalSchema = z.object({
-  id: z.number().nullable(),
-});
+// export const attachmentSchema = z.object({
+//   id: z.number(),
+// });
 
-export const documentItemSchema = z.object({
-  attachment: attachmentSchema,
-  about: z.array(z.number()),
-  principal: principalSchema,
-});
+// export const principalSchema = z.object({
+//   id: z.number().nullable(),
+// });
 
-export const linkSchema = z.object({
-  href: z.string().url(),
-});
+// export const documentItemSchema = z.object({
+//   attachment: attachmentSchema,
+//   about: z.array(z.number()),
+//   principal: principalSchema,
+// });
 
-export const linksSchema = z.object({
-  self: linkSchema,
-  first: linkSchema,
-  last: linkSchema,
-});
+// export const linkSchema = z.object({
+//   href: z.string().url(),
+// });
 
-export const metaSchema = z.object({
-  totalCount: z.number(),
-  pageCount: z.number(),
-  currentPage: z.number(),
-  perPage: z.number(),
-});
+// export const linksSchema = z.object({
+//   self: linkSchema,
+//   first: linkSchema,
+//   last: linkSchema,
+// });
 
-export const documentsSchema = z.object({
-  items: z.array(documentItemSchema),
-  _links: linksSchema,
-  _meta: metaSchema,
-});
+// export const metaSchema = z.object({
+//   totalCount: z.number(),
+//   pageCount: z.number(),
+//   currentPage: z.number(),
+//   perPage: z.number(),
+// });
 
-// This is the type inferred from the schema, you can use it for TypeScript type checking
-export type Documents = z.infer<typeof documentsSchema>;
+// export const documentsSchema = z.object({
+//   items: z.array(documentItemSchema),
+//   _links: linksSchema,
+//   _meta: metaSchema,
+// });
 
-export default documentsSchema;
+// // This is the type inferred from the schema, you can use it for TypeScript type checking
+// export type Documents = z.infer<typeof documentsSchema>;
 
-export interface DocumentAttachment {
-  id: number;
-}
+// export default documentsSchema;
 
-export interface DocumentItem {
-  attachment: DocumentAttachment;
-  about: number[];
-  principal: {
-    id: number | null;
-  };
-}
+// export interface DocumentAttachment {
+//   id: number;
+// }
 
-export interface DocumentsLinks {
-  self: { href: string };
-  first: { href: string };
-  last: { href: string };
-}
+// export interface DocumentItem {
+//   attachment: DocumentAttachment;
+//   about: number[];
+//   principal: {
+//     id: number | null;
+//   };
+// }
 
-export interface DocumentsMeta {
-  totalCount: number;
-  pageCount: number;
-  currentPage: number;
-  perPage: number;
-}
+// export interface DocumentsLinks {
+//   self: { href: string };
+//   first: { href: string };
+//   last: { href: string };
+// }
 
-export interface APIErrorResponse {
-  message: string;
-}
+// export interface DocumentsMeta {
+//   totalCount: number;
+//   pageCount: number;
+//   currentPage: number;
+//   perPage: number;
+// }
+
+// export interface APIErrorResponse {
+//   message: string;
+// }

@@ -1,3 +1,4 @@
+// ~/constants/css-color-names.ts
 const names = [
   "aliceblue",
   "antiquewhite",

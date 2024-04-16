@@ -2,8 +2,7 @@ import { Avatar } from "@radix-ui/react-avatar"
 import { classnames } from "~/utils/global";
 import styles from "./recents.module.css";
 
-
-const RecentSales = () => {
+export const RecentSales = () => {
   return (<div style={{padding: '20px', width: "100%"}}>
     <div className="space-y-8">
       <div className="flex items-center">
@@ -84,5 +83,3 @@ const RecentSales = () => {
     </div>
   </div>)
 }
-
-export default RecentSales;

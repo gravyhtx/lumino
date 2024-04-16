@@ -1,39 +1,73 @@
-import { useState } from "react";
-import Card from "~/components/Card";
-import BarGraph from "~/components/Dashboard/BarGraph";
-import QuickView from "~/components/Dashboard/QuickView";
-import RecentSales from "~/components/Dashboard/RecentSales";
-import Login from "~/components/Login";
-import Section from "~/components/_core/Section";
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import Dashboard from "~/layouts/Dashboard";
-import AffiliateForm from "~/components/MaverickClient/AffiliateForm";
-import MaverickForm from "~/components/MaverickClient/MaverickForm";
+import { useEffect, useState } from "react";
+import Card from "~/components/card";
+import { BarGraph, QuickView, RecentSales } from "~/components/dashboard";
+import Login from "~/components/_elements/Login";
+import Section from "~/components/_core/Section";
+import AffiliateForm from "~/components/_elements/MaverickClient/AffiliateForm";
+import MaverickForm from "~/components/_elements/MaverickClient/MaverickForm";
 import { Submit } from "~/components/_core/ReactHookForm";
-// import type { APIErrorResponse, Documents } from "~/schema";
-import styles from "./styles/index.module.css";
+import { getBoardingApplications, getCustomerVault, getGHLAuth, getPayments, viewBoardingApplication } from "~/utils/API";
 import { classnames } from "~/utils/global";
+import type { BoardingApplicationsResponse } from "~/types/_maverick";
+import styles from "./styles/index.module.css";
 
 export default function Home () {
-  const Continue = () => <Submit text="Continue" onClick={() => setStep([2,0])} />;
   const [step, setStep] = useState<[number,number]>([0,0]);
-  // const fetchBoardingAppDocuments = async (applicationId: string): Promise<Documents> => {
-  //   const response = await fetch(`/api/boarding-applications/${applicationId}/documents`);
+  const [boardingApplications, setBoardingApplications] = useState<BoardingApplicationsResponse | null>(null);
+  const [viewApp, setViewApp] = useState<unknown>(null);
+  const [payments, setPayments] = useState<unknown>(null);
+  const [customerVault, setCustomerVault] = useState<unknown>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [ghlAuth, setGHLAuth] = useState<unknown>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchData = async () => {
+      try {
+        const ghlAuthURL: unknown = await getGHLAuth();
+        console.log(ghlAuthURL);
+        setGHLAuth(ghlAuthURL);
+        const boardingAppsData: unknown = await getBoardingApplications();
+        setBoardingApplications(boardingAppsData as BoardingApplicationsResponse);
+        const viewData: unknown = await viewBoardingApplication('5879');
+        setViewApp(viewData);
+        const paymentsData: unknown = await getPayments();
+        setPayments(paymentsData);
+        const customerVaultData: unknown = await getCustomerVault();
+        setCustomerVault(customerVaultData);
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
   
-  //   if (!response.ok) {
-  //     const errorData = await response.json() as APIErrorResponse;
-  //     throw new Error(errorData.message);
-  //   }
+    fetchData().catch((error) => {
+      console.error('Error fetching data:', error);
+    });
+  }, []);
   
-  //   const documents = await response.json() as Documents;
-  //   return documents;
-  // };
-  // console.log(fetchBoardingAppDocuments('5828'))
+  console.log(boardingApplications);
+  console.log(viewApp);
+  console.log(payments);
+  console.log(customerVault);
+  console.log(error);
+  console.log(loading);
+  console.log(ghlAuth);
+  
+  const Continue = () => <Submit text="Continue" onClick={() => setStep([2,0])} />;
+
+  const subscriptions: number = Number(boardingApplications?._meta?.totalCount) ?? 0;
+  const quickViewData: [string, string, string, string] = ['$45,231.89', `+${subscriptions}`??'--', '+12,234', '+537'];
   return (
     <Dashboard loggedIn={step[0] === 2} logout={() => setStep([0,0])}>
       <Section>
         {step[0] === 2 && <>
         <div className={styles.quickView}>
-          <QuickView margin={"0 1rem"} />
+          <QuickView value={quickViewData} margin={"0 1rem"} />
         </div>
         <div className={classnames("grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-8", styles.containers)}>
           <div className="w-full lg:col-span-1">
@@ -49,11 +83,6 @@ export default function Home () {
         </div></>}
         {step[0] === 0 && <div className={classnames("auth")}>
           <Login onclick={() => setStep([2,0])} />
-          {/* <div style={{padding: '20px'}}>
-            <h4 style={{fontWeight: 'bold'}}>Already a Member?</h4>
-            <div onClick={() => setStep([1,0])}>Register</div>
-            <div onClick={() => setStep([1,1])}>Register</div>
-          </div> */}
         </div>}
         {step[0] === 1 &&
           <>
@@ -62,15 +91,13 @@ export default function Home () {
           </>}
         {step[0] === 0 && <>
           <div style={{padding: '20px', fontSize: '1rem'}}>
-            {/* <h4 style={{fontWeight: 'bold'}}>Not a Lumino Merchant?</h4> */}
             <div style={{fontWeight: 'bold'}} onClick={() => setStep([1,0])}>New to Lumino?</div>
-            <div style={{fontWeight: ''}} onClick={() => setStep([1,1])}>Become a Lumino partner</div>
+            <div style={{fontWeight: 'normal'}} onClick={() => setStep([1,1])}>Become a Lumino partner</div>
           </div>
         </>}
         {step[0] === 1 && <>
           <div style={{padding: '20px', fontSize: '1rem', marginBottom: '50px'}}>
             <h4 onClick={() => setStep([0,0])} style={{fontWeight: 'bold'}}>Already a Member?</h4>
-            {/* <div onClick={() => setStep([0,0])}>Login</div> */}
           </div>
         </>}
       </Section>

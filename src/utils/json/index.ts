@@ -81,6 +81,23 @@ export function parseArray<T>(arr: T[]): T[] {
 }
 
 /**
+ * Parses a JSON string and returns a value of the specified type.
+ * Throws an error if the JSON string cannot be parsed.
+ * 
+ * @template T - The expected type of the parsed JSON.
+ * @param {string} json - The JSON string to parse.
+ * @returns {T} - The parsed JSON in the specified type.
+ * @throws {Error} - Throws an error if the JSON cannot be parsed.
+*/
+export function parseJSON <T>(json: string): T {
+  try {
+    return JSON.parse(json) as T;
+  } catch (error) {
+    throw new Error(`Error parsing JSON: ${String(error)}`);
+  }
+}
+
+/**
  * Extracts all objects from a string and returns them in an array. If the `array` prop is `false`, only the first object is returned.
  * @param str - The string to extract objects from.
  * @param parse - Parse string to JSON or leave as string. Defaults to parsing to JSON.

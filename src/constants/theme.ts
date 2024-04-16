@@ -1,3 +1,4 @@
+// ~/constants/theme.ts
 export const themeCss = {
   // colors: {
   //   light: {

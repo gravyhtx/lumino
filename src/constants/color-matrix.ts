@@ -1,3 +1,4 @@
+// ~/constants/color-matrix.ts
 export const COLOR_MATRIX = {
   cool: {
     crisp:   `1.000  0.000  0.000  0.020  0.000

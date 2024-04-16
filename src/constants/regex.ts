@@ -1,5 +1,6 @@
-//* REGEX PATTERNS
+// ~/constants/regex.ts
 
+//* REGEX PATTERNS
 type RegexPatterns = {
   alpha: RegExp;
   alphaNum: RegExp;
