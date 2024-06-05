@@ -8,6 +8,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   // Initialize URLSearchParams with an object
   const params = new URLSearchParams({
+    code: process.env.GHL_CLIENT_SECRET ?? '',
     response_type: 'code',
     client_id: clientId,
     redirect_uri: redirectUri,

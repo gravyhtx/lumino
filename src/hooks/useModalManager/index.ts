@@ -6,7 +6,7 @@ import { useState } from 'react';
  * @returns An object containing the current open modal's name, functions to open, close, and toggle modals.
  *
  * @example
- * //* In your component
+ * //* In your component:
  * const { openModal, closeModal, toggleModal, currentModal } = useModalManager();
  * 
  * //* To open a modal:
@@ -18,8 +18,8 @@ import { useState } from 'react';
  * //* To toggle a modal:
  * toggleModal('myModal');
  * 
- * //* Check the name of the currently open modal:
- * console.log(currentModal); // Outputs: 'myModal' or null
+ * //* Check if a specific modal is open:
+ * console.log(currentModal === 'myModal'); // Returns `true` if 'myModal' is open
  */
 export const useModalManager = () => {
   const [currentModal, setCurrentModal] = useState<string | null>(null);

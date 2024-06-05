@@ -237,20 +237,17 @@ export const wordCount = (string: string) => {
  * @param {string} string - The string whose character count is to be calculated.
  * @param {boolean} includeWhiteSpace - Whether to include whitespace in the character count.
  * @returns {number} The character count of the string.
+ * 
+ * @example <caption>Counting only non-whitespace characters</caption>
+ * characterCount('  Hello,   world! This  is.  '); // 23
  *
- * @example
- * //* returns 27
- * characterCount('  Hello,   world! This  is.  ', true);
+ * @example <caption>Counting all characters</caption>
+ * characterCount('  Hello,   world! This  is.  ', true); // 27
  * 
- * @example
- * //* returns 23
- * characterCount('  Hello,   world! This  is.  ', false);
- * 
- * @example
- * //* returns 0
- * characterCount('', true);
+ * @example <caption>Empty string</caption>
+ * characterCount('', true); // 0
  */
-export const characterCount = (string: string, includeWhiteSpace = true) => {
+export const characterCount = (string: string, includeWhiteSpace = false) => {
   if (includeWhiteSpace) {
     return string.length;
   } else {

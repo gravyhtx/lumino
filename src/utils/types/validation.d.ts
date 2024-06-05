@@ -19,6 +19,7 @@ export type TypesList =
   | 'percentage'
   | 'element'
   | 'node'
+  | 'domnode'
   | 'undefined'
   | 'null'
   | 'object'
@@ -29,43 +30,48 @@ export type TypesList =
   | 'json'
   | 'jsonobject'
   | 'jsonstring'
+  | 'plainobject'
+  | 'record'
+  | 'map'
+  | 'set'
+  | 'weakmap'
+  | 'weakset'
+  | 'promise'
   // Shortcut types
-  | 's'
-  | 'str'
-  | 'o'
-  | 'obj'
-  | '{}'
-  | 'a'
-  | 'arr'
-  | '[]'
-  | 'multiarr'
-  | 'multiarray'
-  | 'arrs'
-  | '[[]]'
-  | 'f'
-  | 'fun'
-  | 'func'
-  | 'b'
-  | 'bool'
-  | '?'
-  | 'n'
-  | 'num'
-  | 'ns'
-  | 'numstr'
-  | 'big'
-  | 'd'
-  | 'p'
-  | 'percent'
-  | '%'
-  | 'sym'
-  | 'u'
-  | 'und'
-  | 'ud'
-  | 'e'
-  | 'el'
-  | '<>'
-  | 'img'
-  | 'jsonobj'
-  | 'jsonstr'
-  | 'rbgobj'
-  | 'rbgarr';
+  | 'a'             // array
+  | 'arr'           // array
+  | '[]'            // array
+  | 'multiarr'      // arrays
+  | 'multiarray'    // arrays
+  | 'arrs'          // arrays
+  | '[[]]'          // arrays
+  | 's'             // string
+  | 'str'           // string
+  | 'o'             // object
+  | 'obj'           // object
+  | '{}'            // object
+  | 'f'             // function
+  | 'fn'            // function
+  | 'fun'           // function
+  | 'func'          // function
+  | 'b'             // boolean
+  | 'bool'          // boolean
+  | '??'            // boolean
+  | 'n'             // number
+  | 'num'           // number
+  | 'ns'            // numberstring
+  | 'numstr'        // numberstring
+  | 'big'           // bigint
+  | 'd'             // date
+  | 'percent'       // percentage
+  | '%'             // percentage
+  | 'sym'           // symbol
+  | 'u'             // undefined
+  | 'e'             // element
+  | 'el'            // element
+  | '<>'            // element
+  | 'img'           // image
+  | 'jsonobj'       // jsonobject
+  | 'jsonstr'       // jsonstring
+  | 'rbgobj'        // rgbobject
+  | 'rbgarr';       // rgbarray

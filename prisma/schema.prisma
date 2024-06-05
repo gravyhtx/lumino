@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
     provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
@@ -15,15 +14,17 @@ datasource db {
 }
 
 model Client {
-  id            String         @id @default(cuid())
-  type          ClientType     @default(MERCHANT)
+  id            String        @id @default(cuid())
+  type          ClientType    @default(MERCHANT)
   name          String
-  email         String         @unique
+  email         String        @unique
   transactions  Transaction[]
   customers     Customer[]
   subscriptions Subscription[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  payouts       Payout[]
+  commissions   Commission[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   deletedAt     DateTime?
 }
 
@@ -40,17 +41,18 @@ model Customer {
 }
 
 model Transaction {
-  id          String          @id @default(cuid())
-  amount      Float
-  currency    String
-  status      TransactionStatus
-  customer    Customer        @relation(fields: [customerId], references: [id])
-  customerId  String
-  client      Client          @relation(fields: [clientId], references: [id])
-  clientId    String
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  deletedAt   DateTime?
+  id            String         @id @default(cuid())
+  amount        Float
+  currency      String
+  status        TransactionStatus
+  customer      Customer       @relation(fields: [customerId], references: [id])
+  customerId    String
+  client        Client         @relation(fields: [clientId], references: [id])
+  clientId      String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+  commissions   Commission[]
 }
 
 model Subscription {
@@ -63,6 +65,39 @@ model Subscription {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   deletedAt   DateTime?
+}
+
+model Payout {
+  id          String    @id @default(cuid())
+  amount      Float
+  currency    String
+  status      PayoutStatus
+  date        DateTime
+  clientId    String
+  client      Client    @relation(fields: [clientId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+}
+
+model Commission {
+  id            String         @id @default(cuid())
+  amount        Float
+  currency      String
+  transactionId String
+  transaction   Transaction    @relation(fields: [transactionId], references: [id])
+  clientId      String
+  client        Client         @relation(fields: [clientId], references: [id])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+}
+
+
+enum PayoutStatus {
+  PENDING
+  PAID
+  CANCELLED
 }
 
 enum ClientType {

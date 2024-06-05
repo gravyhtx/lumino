@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "~/components/ui/tabs";
-import { classnames, titlecase } from "~/utils/global";
+import { classnames } from "~/utils/global";
 // import {InfoCard} from "../Cards/InfoCard";
 import { CardSvg, InfoCard } from "../Cards";
 import styles from "./quickview.module.css";
+import { titlecase } from "~/utils/core";
 
 type Timeframes = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year';
 type Amount = `${'+'|'-'|''}${'$'|''}${string}${'%'|''}`;

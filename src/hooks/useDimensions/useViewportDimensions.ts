@@ -7,8 +7,6 @@ import { useState, useEffect } from 'react';
  *
  * @example
  * const { width, height } = useViewportDimensions();
- * 
- * //* Now width and height contain the current width and height of the viewport.
  */
 export function useViewportDimensions() {
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });

@@ -1,119 +1,64 @@
-import type { TitlecaseConfig } from "./types";
+import { twMerge } from "tailwind-merge";
 
 /**
- * Combines multiple class names into a single string and filters out any undefined values.
+ * Combines multiple class names into a single string, supporting various input types.
  *
- * @param {...(string | undefined)[]} classes - An array of class names, which can include undefined values.
+ * @param {...unknown[]} classes - Class names which can be strings, arrays, objects, or null/undefined.
  * @returns {string} A single string containing all provided class names, separated by spaces.
- * @example
- * const className = classnames('btn', isActive ? 'active' : undefined); // 'btn active' if isActive is true, otherwise 'btn'
-*/
-export const classnames = (...classes: (string | undefined)[]): string => classes.filter(Boolean).join(" ");
-
-
-/**
- * Converts the first character of each word in a string to uppercase except for exceptions,
- * except when the word is the first or last in the title. It also handles words that should
- * maintain their exact casing. Additionally, allows specifying instances of exceptions to be capitalized.
- *
- * @param {string} title - The string to convert.
- * @param {TitlecaseConfig} config - Configuration object including exceptions, exactCases, and instanceExceptions.
- * @returns {string} - The converted string with specific capitalization rules applied.
- *
- * @example
- * //* General exception and exact casing
- * titlecase('an example title with and and or', { exceptions: ['and', 'or'], exactCases: ['xD00Dx'] });
- * // Output: 'An Example Title with And and Or'
- *
- * @example
- * //* Maintaining exact casing for specific words
- * titlecase('Claire McChesney and xD00Dx on the Beach', { exceptions: ['on', 'the'], exactCases: ['xD00Dx'] });
- * // Output: 'Claire McChesney and xD00Dx on the Beach'
- *
- * @example
- * //* Capitalizing specific instances of exceptions
- * titlecase('this and and and that', { exceptions: ['and'], instanceExceptions: { 'and': [1, 3] } });
- * // Output: 'This And and And That'
+ * @example <caption>Basic usage with strings</caption>
+ * console.log(classnames('foo', true && 'bar', 'baz')); // 'foo bar baz'
+ * 
+ * @example <caption>Using objects</caption>
+ * console.log(classnames({ foo: true, bar: false, baz: true })); // 'foo baz'
+ * 
+ * @example <caption>Using objects with various structures</caption>
+ * console.log(classnames({ foo: true }, { bar: false }, null, { '--foobar': 'hello' })); // 'foo --foobar'
+ * 
+ * @example <caption>Using arrays</caption>
+ * console.log(classnames(['foo', 0, false, 'bar'])); // 'foo bar'
+ * 
+ * @example <caption>Using nested arrays</caption>
+ * console.log(classnames(['foo'], ['', 0, false, 'bar'], [['baz', [['hello'], 'there']]])); // 'foo bar baz hello there'
+ * 
+ * @example <caption>Complex example with various input types</caption>
+ * console.log(classnames('foo', [1 && 'bar', { baz: false, bat: null }, ['hello', ['world']]], 'cya')); // 'foo bar hello world cya'
  */
-export const titlecase = (title: string, config: TitlecaseConfig = {}) => {
-  const { exceptions = [], exactCases = [], instanceExceptions = {} } = config;
+export const classnames = (...classes: unknown[]): string => {
+  const result: string[] = [];
 
-  return title
-    .toLowerCase()
-    .split(' ')
-    .map((word, index, words) => {
-      const totalWords = words.length;
-      const exactCaseWord = exactCases.find(exactWord => exactWord.toLowerCase() === word);
-      if (exactCaseWord) {
-        return exactCaseWord;
-      }
+  /**
+   * Processes the input to determine its type and handle it accordingly.
+   * @param {unknown} input - The input to process.
+   */
+  const process = (input: unknown): void => {
+    // If the input is a string, add it to the result
+    if (typeof input === 'string') {
+      result.push(input);
+    }
 
-      if (index === 0 || index === totalWords - 1) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }
+    // If the input is an array, recursively process each element
+    if (Array.isArray(input)) {
+      input.forEach(process);
+    }
 
-      const instanceExceptionIndices = instanceExceptions[word.toLowerCase()];
-      if (instanceExceptionIndices && instanceExceptionIndices.includes(index + 1)) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }
+    // If the input is an object, add its keys to the result if their values are truthy
+    if (input && typeof input === 'object') {
+      Object.keys(input as Record<string, unknown>).forEach(key => {
+        if ((input as Record<string, unknown>)[key]) {
+          result.push(key);
+        }
+      });
+    }
+  };
 
-      if (exceptions.includes(word)) {
-        return word;
-      }
-
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    })
-    .join(' ');
-};
-
-
-/**
- * Normalizes an array of numbers so that their sum equals a specified target.
- * Adjusts the values proportionally and respects the maximum decimal places.
- * Distributes rounding differences across the array elements.
- * 
- * @param {number[]} numbers - Array of numbers to normalize.
- * @param {number} [target=100] - Target sum for the numbers.
- * @param {number | boolean} [maxDecimals=true] - Maximum decimal places.
- * @returns {number[]} Normalized array of numbers.
- * @example
- * const numbers = [40.26, 10.54, 49.19];
- * const normalizedNumbers = normalizeArray(numbers); // Adjusts the array so that the sum is 100
-*/
-export function normalizeArray(numbers: number[], target = 100, maxDecimals: number | boolean = true): number[] {
-  if (numbers.length === 0) return [];
-
-  const total = numbers.reduce((sum, num) => sum + num, 0);
-  const maxDecimalPlaces = typeof maxDecimals === 'boolean'
-    ? (maxDecimals ? Math.max(...numbers.map(num => (num.toString().split('.')[1] ?? '').length)) : 0)
-    : maxDecimals;
-
-  const normalized = numbers.map(num => (num / total) * target);
-  const roundingError = normalized.reduce((sum, num) => sum + num, 0) - target;
-  
-  return normalized.map((num, index) => {
-    const adjustment = index === numbers.length - 1 ? roundingError : 0;
-    return parseFloat((num - adjustment).toFixed(maxDecimalPlaces));
-  });
-}
-
-
-/**
- * Parses a JSON string and returns a value of the specified type.
- * Throws an error if the JSON string cannot be parsed.
- * 
- * @template T - The expected type of the parsed JSON.
- * @param {string} json - The JSON string to parse.
- * @returns {T} - The parsed JSON in the specified type.
- * @throws {Error} - Throws an error if the JSON cannot be parsed.
-*/
-export const parseJSON = <T>(json: string): T => {
-  try {
-    return JSON.parse(json) as T;
-  } catch (error) {
-    throw new Error(`Error parsing JSON: ${String(error)}`);
+  // Process each class name input
+  for (const cls of classes) {
+    process(cls);
   }
-}
+
+  // Merge the class names and return the result as a single string
+  return twMerge(result.join(' '));
+};
 
 
 /**
@@ -202,7 +147,6 @@ export const isNegative = (value: string | number): boolean => {
   return false;
 }
 
-
 /**
  * Normalizes an array of numbers or percentage strings to make their sum equal to a specified total.
  * The function proportionally adjusts each value based on its ratio to the total sum of all values,
@@ -210,21 +154,24 @@ export const isNegative = (value: string | number): boolean => {
  * up correctly to the specified total by adjusting the last value accordingly.
  *
  * @param {Array<number | string>} values - An array of numbers or percentage strings to be normalized.
- * @param {number} total - The desired total sum of the normalized values. Defaults to 100.
- * @param {0 | 1 | 2} decimalPlaces - The number of decimal places to round each normalized value to. Defaults to 2.
+ * @param {number} [total=100] - The desired total sum of the normalized values. Defaults to 100.
+ * @param {number | boolean} [decimalPlaces=true] - The number of decimal places to round each normalized value to. Defaults to 2.
  * @returns {Array<number>} An array of normalized and rounded values that sum up to the specified total.
  *
- * @example
- * //* Normalizes to a sum of 100 with 2 decimal places
+ * @example <caption>Normalizes to a sum of 100 with 2 decimal places</caption>
  * console.log(normalizeValues([10, 10, 30], 100)); // Output: [20, 20, 60]
  *
- * //* Normalizes to a sum of 10 with 2 decimal places
+ * @example <caption>Normalizes to a sum of 10 with 2 decimal places</caption>
  * console.log(normalizeValues([10, 10, 30], 10)); // Output: [2, 2, 6]
  *
- * //* Normalizes to a sum of 100 with 0 decimal places
- * console.log(normalizeValues([30, 10, 20], 100, 0)); // Output: [50, 17, 33]
+ * @example <caption>Normalizes to a sum of 100 with 0 decimal places</caption>
+ * console.log(normalizeValues([30, 10, 20], 100, 0)); // Output: [50, 17, 33] 
  */
-export function normalizeValues(values: (number | string)[], total = 100, decimalPlaces: 0 | 1 | 2 = 2): number[] {
+export function normalizeValues(values: (number | string)[], total = 100, decimalPlaces: number | boolean = true): number[] {
+  if (values.length === 0) return [];
+
+  decimalPlaces = typeof decimalPlaces === 'boolean' ? (decimalPlaces ? 2 : 0) : decimalPlaces;
+
   const numericValues = values.map(value =>
     typeof value === 'string' && value.endsWith('%') ? parseFloat(value) : Number(value)
   );

@@ -1,66 +1,60 @@
-// import { createEnv } from "@t3-oss/env-nextjs";
-// import { z } from "zod";
+import { createEnv } from "@t3-oss/env-nextjs";
+import { z } from "zod";
 
-// export const env = createEnv({
-//   /**
-//    * Specify your server-side environment variables schema here. This way you can ensure the app
-//    * isn't built with invalid env vars.
-//    */
-//   server: {
-//     DATABASE_URL: z
-//       .string()
-//       .url()
-//       .refine(
-//         (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
-//         "You forgot to change the default URL"
-//       ),
-//     NODE_ENV: z
-//       .enum(["development", "test", "production"])
-//       .default("development"),
-//     NEXTAUTH_SECRET:
-//       process.env.NODE_ENV === "production"
-//         ? z.string()
-//         : z.string().optional(),
-//     NEXTAUTH_URL: z.preprocess(
-//       // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-//       // Since NextAuth.js automatically uses the VERCEL_URL if present.
-//       (str) => process.env.VERCEL_URL ?? str,
-//       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-//       process.env.VERCEL ? z.string() : z.string().url()
-//     ),
-//     // DISCORD_CLIENT_ID: z.string(),
-//     // DISCORD_CLIENT_SECRET: z.string(),
-//   },
+// interface Env {
+//   DATABASE_URL: string;
+//   NODE_ENV: 'development' | 'test' | 'production';
+//   NEXTAUTH_SECRET?: string;
+//   NEXTAUTH_URL?: string;
+//   MAVERICK_API_URL: string;
+//   MAVERICK_API_TEST_URL: string;
+//   MAVERICK_API_TEST_KEY: string;
+//   MAVERICK_API_KEY: string;
+//   GHL_URL: string;
+//   GHL_CLIENT_ID: string;
+//   GHL_CLIENT_SECRET: string;
+//   SUPABASE_URL: string;
+//   SUPABASE_API_KEY: string;
+//   SUPABASE_SERVICE_ROLE_KEY: string;
+// }
 
-//   /**
-//    * Specify your client-side environment variables schema here. This way you can ensure the app
-//    * isn't built with invalid env vars. To expose them to the client, prefix them with
-//    * `NEXT_PUBLIC_`.
-//    */
-//   client: {
-//     // NEXT_PUBLIC_CLIENTVAR: z.string(),
-//   },
-
-//   /**
-//    * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
-//    * middlewares) or client-side so we need to destruct manually.
-//    */
-//   runtimeEnv: {
-//     DATABASE_URL: process.env.DATABASE_URL,
-//     NODE_ENV: process.env.NODE_ENV,
-//     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-//     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-//     // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
-//     // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-//   },
-//   /**
-//    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
-//    * useful for Docker builds.
-//    */
-//   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
-//   /**
-//    * Makes it so that empty strings are treated as undefined. `SOME_VAR: z.string()` and
-//    * `SOME_VAR=''` will throw an error.
-//    */
-//   emptyStringAsUndefined: true,
-// });
+export const env = createEnv({
+  server: {
+    DATABASE_URL: z.string().url().refine(
+      (str) => str.startsWith("postgres://") || str.startsWith("file:"),
+      { message: "DATABASE_URL must be a valid PostgreSQL or SQLite connection string." }
+    ),
+    NODE_ENV: z.enum(["development", "test", "production"]),
+    NEXTAUTH_SECRET: z.string().optional(),
+    NEXTAUTH_URL: z.string().url().optional(),
+    MAVERICK_API_URL: z.string().url(),
+    MAVERICK_API_TEST_URL: z.string().url(),
+    MAVERICK_API_TEST_KEY: z.string(),
+    MAVERICK_API_KEY: z.string(),
+    GHL_URL: z.string().url(),
+    GHL_CLIENT_ID: z.string(),
+    GHL_CLIENT_SECRET: z.string(),
+    SUPABASE_URL: z.string().url(),
+    SUPABASE_API_KEY: z.string(),
+    SUPABASE_SERVICE_ROLE_KEY: z.string(),
+  },
+  client: {},
+  runtimeEnv: {
+    DATABASE_URL: process.env.DATABASE_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    MAVERICK_API_URL: process.env.MAVERICK_API_URL,
+    MAVERICK_API_TEST_URL: process.env.MAVERICK_API_TEST_URL,
+    MAVERICK_API_TEST_KEY: process.env.MAVERICK_API_TEST_KEY,
+    MAVERICK_API_KEY: process.env.MAVERICK_API_KEY,
+    GHL_URL: process.env.GHL_URL,
+    GHL_CLIENT_ID: process.env.GHL_CLIENT_ID,
+    GHL_CLIENT_SECRET: process.env.GHL_CLIENT_SECRET,
+    SUPABASE_URL: process.env.SUPABASE_URL,
+    SUPABASE_API_KEY: process.env.SUPABASE_API_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  emptyStringAsUndefined: true,
+});

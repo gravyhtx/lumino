@@ -1,7 +1,7 @@
 import React, { forwardRef, type ReactNode, type HTMLAttributes } from 'react';
 import styles from './card.module.css';
 import { classnames } from '~/utils/global'
-import withAutoAnimate from '~/hoc/withAutoAnimate';
+import withAutoAnimate from '~/hocs/withAutoAnimate';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   aria?: {

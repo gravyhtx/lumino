@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Days, Months } from "~/types/DateTime";
 
 //?|[ GLOBAL TYPES ]|?//
-interface DateObject {
+type DateObject = {
   month: number;
   day: number;
   year: number;
@@ -10,7 +10,7 @@ interface DateObject {
 
 type DateTime = number | Date;
 
-interface TimeZoneData {
+type TimeZoneData = {
   code: string | undefined;
   coordinates: string | undefined;
   tz: string | undefined;
@@ -84,16 +84,16 @@ export const getDay = (leadingZeros?: boolean): string => {
  * @example
  * getDayOfYear(); //=> 174 if the current day is June 23rd
  */
-export const dayInYear = (d: Date): number => Math.floor((d.getTime() - new Date(d.getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
+export const getDayOfYear = (d: Date): number => Math.floor((d.getTime() - new Date(d.getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24);
 
-//* GET CURRENT DAY OF THE WEEK
+//* DAYS OF THE WEEK
 /**
  * An array of day names.
  * @type {Array<Days>}
  */
 export const day: Days[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-//* GET CURRENT DAY OF THE WEEK
+//* MONTHS
 /**
  * An array of month names.
  * @type {Array<Months>}
@@ -116,6 +116,17 @@ export const monthNumber = (name: Months) => month.indexOf(name) + 1;
  * @returns {number} The number of days in the specified month/year.
  */
 export const daysInMonth = (month: Months, year: number) => new Date(year, monthNumber(month), 0).getDate();
+
+//* GET SECOND UNTIL MIDNIGHT
+/**
+ * Calculates the number of seconds until midnight.
+ * @param {Date} date - The date to calculate from.
+ * @returns {number} The number of seconds until midnight.
+ */
+export const getSecondsUntilMidnight = (date: Date) =>
+  (24 - date.getHours()) * 60 * 60 +
+  (60 - date.getMinutes()) * 60 +
+  (60 - date.getSeconds());
 
 //* GET HOURS/MINUTES IN CALCULATION OR MILITARY TIME
 /**
@@ -548,3 +559,39 @@ export const convertTimeZone = (
       return `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
 };
+
+interface TimeFormatOptions {
+  hour12?: boolean;
+  [key: string]: unknown; // Allow for additional options that might be supported by toLocaleTimeString
+}
+
+/**
+ * Formats a Date object into a locale-specific time string.
+ *
+ * This function converts a Date object to a string that represents the time
+ * part of the date in a human-readable format, tailored to a specific locale.
+ * It allows for customization of the time format, including whether to use
+ * 12-hour or 24-hour format.
+ *
+ * @param {Date} date - The Date object to format.
+ * @param {string} [locale="en-GB"] - The locale code that determines the time format. Defaults to "en-GB" for British English which uses a 24-hour clock.
+ * @param {Object} [options={}] - Options to customize the time format, such as hour12 to toggle between 24-hour and 12-hour formats.
+ * @returns {string} The formatted time string.
+ *
+ * @example
+ * // Default usage with British locale, showing 24-hour format:
+ * console.log(logTime(new Date())); // Outputs: "17:45:07"
+ *
+ * @example
+ * // Custom usage with US locale, opting for 12-hour format with AM/PM:
+ * console.log(logTime(new Date(), "en-US", { hour12: true })); // Might output: "5:45:07 PM"
+ */
+export const logTime = (date: Date, locale = "en-GB", options: TimeFormatOptions = {}) => {
+  return date.toLocaleTimeString(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: options?.hour12 ?? false,
+    ...options
+  });
+}

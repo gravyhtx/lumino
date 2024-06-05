@@ -2,14 +2,17 @@
 import type { BoardingApplicationsResponse, ViewBoardingApplication } from '~/types/_maverick';
 export * from './helpers';
 
-export const getGHLAuth = async (): Promise<unknown> => {
+export const getGHLAuth = async (): Promise<void> => {
   const response = await fetch('/api/oauth/init');
   if (!response.ok) {
-    console.log('error')
-    throw new Error('Failed to fetch boarding applications');
+    console.error('Failed to start the OAuth flow');
+    throw new Error('Failed to fetch the OAuth initiation endpoint');
   }
-  console.log(response.json() as Promise<unknown>)
-  return response.json() as Promise<unknown>;
+
+  const json = await response.json() as object;
+  if ('url' in json) {
+    window.location.href = json.url as string;
+  }
 };
 
 /**

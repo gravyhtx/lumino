@@ -1,6 +1,5 @@
 import { isValidElement } from 'react';
-// import { isJsonObject, isJsonString } from '../../helpers/jsonHelpers';
-import { isJsonObject, isJsonString } from '../json';
+import { isJsonObject, isJsonString } from '../core/json';
 import type { TypesList } from '../types/validation';
 
 //* CHECK VARIABLE TYPES
@@ -30,75 +29,65 @@ export const checkTypeof = (
 
   //? Perform checks...
   output =
-    //? ARRAYS (array of arrays) = TRUE
+    // Arrays (array of arrays)
     type && (type === "arrays" || type === "arrayofarrays" || type === "array_of_arrays" || type === "multiarray"
     || type === "multi_array" || type === "multiple_arrays" || type === "multiplearrays")
     && isArrayOfArrays(variable)
 
       ? output = {is: true, type: "arrays"}
     
-    //? ARRAYS (has arrays) = TRUE
+    // Arrays (has arrays)
     : type && (type === "hasarrays" || type === "somearrays")
       && hasArrays(variable)
 
       ? output = {is: true, type: "arrays"}
 
-    //? ARRAY = TRUE
+    // Array
     : type && type === "array" && (Array.isArray(variable) || Object.prototype.toString.call(variable) === '[object Array]')
 
       ? output = {is: true, type: "array"}
 
-    //? OBJECT = FALSE (ARRAY)
-    : type && type === "object" && Array.isArray(variable)
-
-      ? output = {is: false, type: "array"}
-
-    //? FUNCTION = TRUE
+    // Function
     : type && type === "function" && isFunction(variable)
 
       ? output = {is: true, type: "function"}
 
-    //? REGEX = TRUE
+    // RegExp
     : (type && type === "regex" && variable instanceof RegExp)
 
       ? output = {is: true, type: "regex"}
 
-    //? INFINITY = TRUE
+    // Infinity
       :type && type === "infinity" && variable === Infinity
       ? output = {is: true, type: "infinity"}
 
-    //? NUMBER = TRUE
+    // Number
     : type && type === 'number' && !Number.isNaN(parseFloat(variable as string)) && isFinite(variable as number)
 
       ? output = {is: true, type: "number"}
 
-    //? NUMBER = FALSE ('Infinity')
-    : type && type === 'number' && variable === Infinity
-
-      ? output = {is: true, type: "infinity"}
-
-    //? NUMBER STRING = TRUE
+    // Number String
     : type && type === 'numberstring' && typeof variable === 'string'
       && typeof Number(variable) === 'number' && !Number.isNaN(Number(variable))
 
       ? output = {is: true, type: 'numberstring'}
 
-    //? STRING = TRUE
+    // String
     : type && type === 'string' && typeof variable === 'string'
 
       ? output = {is: true, type: 'string'}
 
-    //? SYMBOL = TRUE
+    // Symbol
     : type && type === 'symbol' && typeof variable === 'symbol'
 
       ? output = {is: true, type: 'symbol'}
 
-    //? DATE = TRUE (`new Date`)
+    // Date
     : type && Object.prototype.toString.call(variable) === '[object Date]' && isFinite((variable as Date).getTime())
 
       ? output = {is: true, type: 'date'}
 
-    //? NODE = TRUE
+    // DOM Node
     : type && type === "node" && variable instanceof Node
 
       ? output = {is: true, type: "node"}
@@ -108,7 +97,7 @@ export const checkTypeof = (
 
       ? output = {is: false, type: "node"}
     
-    //? HTML COLLECTION = TRUE
+    // HTML Collection
     : type && type === "htmlcollection" && variable instanceof HTMLCollection
 
       ? output = {is: false, type: "node"}
@@ -117,52 +106,88 @@ export const checkTypeof = (
     : type && type === "function" && variable instanceof HTMLCollection
 
       ? output = {is: false, type: "htmlcollection"}
-    //? JSON OBJECT = TRUE
+
+    // Promise
+    : type && type === "promise" && variable instanceof Promise
+
+      ? output = {is: true, type: "Promise"}
+
+    // JSON Object
     : type && (type === "json" || type === "jsonobject") && isJsonObject(variable)
 
     ? output = {is: true, type: "json (object)"}
 
-    //? JSON STRING = TRUE
+    // JSON String
     : type && (type === "jsonstring") && isJsonString(variable)
 
       ? output = {is: true, type: "json (string)"}
     
-    //? NULL = TRUE
+    // Null
     : type && type === "null" && variable === null && !variable
 
       ? output = {is: true, type: "null"}
-    
-    //? OBJECT = FALSE (NULL)
-    : type && type === 'object' && variable === null
 
-      ? output = {is: false, type: 'null'}
-
-    //? UNDEFINED = TRUE
+    // Undefined
     : type && type === "undefined" && variable === undefined
 
       ? output = {is: false, type: "undefined"}
 
-    //? REACT ELEMENT = TRUE
+    // React Element
     : type && type === "element" && isValidElement(variable)
 
       ? output = {is: true, type: "element"}
 
-    //? IMAGE = TRUE
+    // Image
     : type && type === 'image' && typeof variable === 'object' && variable !== null && "type" in variable && (variable as { type?: string }).type === 'img'
 
       ? output = {is: true, type: 'image'}
 
-    //? PERCENTAGE = TRUE
+    // Percentage
     : type && type === 'percentage' && typeof variable === 'string' && /^(\d+|(\.\d+))(\.\d+)?%$/.test(variable)
 
       ? output = {is: true, type: 'percentage'}
 
-    //? REGEX = FALSE
-    : (type && type !== "regex" && variable instanceof RegExp)
+    // Record
+    : (type && type === "record" && isRecord(variable))
+      
+        ? output = { is: true, type: "record" }
 
-      ? output = {is: false, type: "regex"}
+    // Plain Object
+    : (type && type === "plainobject" && isPlainObject(variable))
+      
+        ? output = { is: true, type: "plain object" }
+
+    // Set
+    : type && type === "set" && variable instanceof Set
+
+      ? output = { is: true, type: "Set" }
+
+    // WeakSet
+    : type && type === "weakset" && variable instanceof WeakSet
+
+      ? output = { is: true, type: "WeakSet" }
+
+    // Map
+    : type && type === "map" && variable instanceof Map
+
+      ? output = { is: true, type: "Map" }
+
+    // WeakMap
+    : type && type === "weakmap" && variable instanceof WeakMap
+
+      ? output = { is: true, type: "WeakMap" }
+
+    //? OBJECT = FALSE (NULL)
+    : type && type === 'object' && variable === null
+
+    ? output = {is: false, type: 'null'}
+
+    //? OBJECT = FALSE (ARRAY)
+    : type && type === "object" && Array.isArray(variable)
+
+    ? output = {is: false, type: "array"}
     
-    //? OBJECT = TRUE
+    // Object
     : type && type === "object" && typeof variable === "object" && variable !== null && !Array.isArray(variable)
 
       ? output = { is: true, type: "object" }
@@ -397,6 +422,25 @@ export const isArrayOfArrays = (arr: unknown): arr is unknown[][] =>
 export const hasArrays = (arr: unknown): boolean =>
   Array.isArray(arr) && arr.some((item) => Array.isArray(item));
 
+//* CHECK FOR PLAIN OBJECT
+/**
+ * Checks if a value is a plain object.
+ * @param {unknown} value - The value to check.
+ * @returns {value is Record<(string | number | symbol), unknown>} Returns true if the value is a plain object, false otherwise.
+ */
+export function isPlainObject(value: unknown): value is Record<(string | number | symbol), unknown> {
+  return typeof value === 'object' && value !== null && value.constructor === Object;
+}
+
+//* CHECK FOR RECORD
+/**
+ * Checks if a value is a record.
+ * @param {unknown} value - The value to check.
+ * @returns {value is Record<(string | number | symbol), unknown>} Returns true if the value is a record, false otherwise.
+ */
+export function isRecord(value: unknown): value is Record<(string | number | symbol), unknown> {
+  return !Array.isArray(value) && !isPlainObject(value) && !(value instanceof Map) && !(value instanceof Set);
+}
 
 //* CHECK IF STRING IS A VALID URL
 /**
@@ -516,13 +560,14 @@ const typeShortcuts = (type: TypesList | false) => {
         type = 'arrays';
         break;
       case 'f':
+      case 'fn':
       case 'fun':
       case 'func':
         type = 'function';
         break;
       case 'b':
       case 'bool':
-      case '?':
+      case '??':
         type = 'boolean';
         break;
       case 'n':
@@ -539,7 +584,6 @@ const typeShortcuts = (type: TypesList | false) => {
       case 'd':
         type = 'date';
         break;
-      case 'p':
       case 'percent':
       case '%':
         type = 'percentage';
@@ -548,8 +592,6 @@ const typeShortcuts = (type: TypesList | false) => {
         type = 'symbol';
         break;
       case 'u':
-      case 'und':
-      case 'ud':
         type = 'undefined';
         break;
       case 'e':

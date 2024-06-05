@@ -8,10 +8,13 @@ import Section from "~/components/_core/Section";
 import AffiliateForm from "~/components/_elements/MaverickClient/AffiliateForm";
 import MaverickForm from "~/components/_elements/MaverickClient/MaverickForm";
 import { Submit } from "~/components/_core/ReactHookForm";
-import { getBoardingApplications, getCustomerVault, getGHLAuth, getPayments, viewBoardingApplication } from "~/utils/API";
+// import { getBoardingApplications, getCustomerVault, getGHLAuth, getPayments, viewBoardingApplication } from "~/utils/API";
+import { getBoardingApplications, getCustomerVault, getPayments, viewBoardingApplication } from "~/utils/API";
+// UTILS
 import { classnames } from "~/utils/global";
 import type { BoardingApplicationsResponse } from "~/types/_maverick";
 import styles from "./styles/index.module.css";
+import { signIn } from "next-auth/react";
 
 export default function Home () {
   const [step, setStep] = useState<[number,number]>([0,0]);
@@ -21,15 +24,22 @@ export default function Home () {
   const [customerVault, setCustomerVault] = useState<unknown>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [ghlAuth, setGHLAuth] = useState<unknown>(null);
+  // const [ghlAuth, setGHLAuth] = useState<unknown>(null);
 
+  const handleSignIn = async () => {
+    try {
+      await signIn('appauth', { callbackUrl: '/api/auth/callback/appauth' });
+    } catch (error) {
+      console.error('Error signing in:', error);
+    }
+  };
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const ghlAuthURL: unknown = await getGHLAuth();
-        console.log(ghlAuthURL);
-        setGHLAuth(ghlAuthURL);
+        // const ghlAuthURL: unknown = await getGHLAuth();
+        // console.log(ghlAuthURL);
+        // setGHLAuth(ghlAuthURL);
         const boardingAppsData: unknown = await getBoardingApplications();
         setBoardingApplications(boardingAppsData as BoardingApplicationsResponse);
         const viewData: unknown = await viewBoardingApplication('5879');
@@ -50,13 +60,13 @@ export default function Home () {
     });
   }, []);
   
+  // console.log(ghlAuth);
   console.log(boardingApplications);
   console.log(viewApp);
   console.log(payments);
   console.log(customerVault);
   console.log(error);
   console.log(loading);
-  console.log(ghlAuth);
   
   const Continue = () => <Submit text="Continue" onClick={() => setStep([2,0])} />;
 
@@ -100,6 +110,7 @@ export default function Home () {
             <h4 onClick={() => setStep([0,0])} style={{fontWeight: 'bold'}}>Already a Member?</h4>
           </div>
         </>}
+        <button onClick={handleSignIn}>Sign In with GoHighLevel</button>
       </Section>
     </Dashboard>
   );

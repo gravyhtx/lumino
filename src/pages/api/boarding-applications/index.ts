@@ -5,7 +5,6 @@ import type { BoardingApplicationsResponse } from '~/types/_maverick';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const maverickAPIUrl = 'https://sandbox-dashboard.maverickpayments.com/api/boarding-application';
-
   const fetchOptions: RequestInit = {
     method: 'GET',
     headers: {

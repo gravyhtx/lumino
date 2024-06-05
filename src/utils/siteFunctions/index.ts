@@ -1,3 +1,3 @@
 export * from './main';
 export * from './datetime';
-export * from './promises';
+export * from '../core/promises';

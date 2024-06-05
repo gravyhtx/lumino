@@ -1,0 +1,1 @@
+export type WindowCrypto = 'crypto' | 'msCrypto';

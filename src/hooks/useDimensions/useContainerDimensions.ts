@@ -27,20 +27,3 @@ export const useContainerDimensions = (): [RefObject<HTMLElement>, { width: numb
 
   return [ref, dimensions];
 };
-
-/**
- * A component that measures its own dimensions.
- *
- * This component uses the `useContainerDimensions` hook to measure its own width and height.
- * The dimensions are stored in the `dimensions` state variable, which can be used for calculations or styles.
- *
- * @returns a React element with a ref attached to it.
- */
-
-//* const MyComponent: React.FC = () => {
-//*   const [ref, dimensions] = useContainerDimensions();
-//*
-//*   // The rest of your component...
-//*
-//*   return <div ref={ref}> {/* Some content */} </div>;
-//* }

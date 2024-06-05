@@ -1,3 +1,4 @@
+// ~/utils/core/regex.ts
 import REGEX_PATTERNS from "~/constants/regex";
 
 /**
@@ -81,7 +82,8 @@ export const patterns = REGEX_PATTERNS;
  * @param {string} [flag=''] - Flags to apply to the combined regular expression.
  * @returns {RegExp} - A new regular expression that combines the input expressions.
  * @example
- * const combinedRegex = makeRegExp([/abc/, /123/], 'i');
+ * const regex = [/abc/, /123/];
+ * const combinedRegex = makeRegExp(regex, 'i'); // /abc|123/i
  */
 export function makeRegExp(regex: RegExp | RegExp[], flag = ''): RegExp {
   const regexStr = Array.isArray(regex) ? regex.map((r) => r.source).join('|') : regex;
@@ -93,5 +95,6 @@ export function makeRegExp(regex: RegExp | RegExp[], flag = ''): RegExp {
  * @module regex
  * @example
  * import regex from 'utils/regex';
+import util from 'util';
  */
 export default regex;

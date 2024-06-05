@@ -1,98 +1,25 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-import { cointoss, numberClamp, randomBell, randomize, toNum } from ".";
-import { checkType, hasArrays } from "../validation";
-
+// ~/utils/core/arrays.ts
+import { hasArrays } from "../validation";
+import { numberClamp, toNum } from "./numbers";
+import { cointoss, randomBell, randomize } from "./random";
 
 //!=/======\=!//
 //?[ ARRAYS ]?//
 //!=\======/=!//
 
-//* MERGE OBJECTS
-/**
- * Merges objects together into one object.
- * @param objects The objects to merge.
- * @returns The merged object.
- */
-export const mergeObjects = <T extends object>(
-  ...objects: T[]
-): T => {
-  // Ensure objects are treated as extendable object types
-  return smush(objects).reduce((acc, cur) => ({ ...acc, ...cur }), {} as T);
-};
-
-//! EXAMPLES
-//? const obj1 = { a: 1, b: 2 };
-//? const obj2 = { b: 3, c: 4 };
-//? const obj3 = { c: 5, d: 6 };
-//? const merged = mergeObjects(obj1, obj2, obj3);
-//? console.log(merged);
-///   Output: { a: 1, b: 3, c: 5, d: 6 }
-//? const arr1 = [{ a: 1, b: 2 }, { c: 3 }];
-//? const arr2 = [{ b: 4 }, { d: 5 }];
-//? const arr3 = [{ c: 6, d: 7 }, { e: 8 }];
-//? const merged = mergeObjects(arr1, arr2, arr3);
-//? console.log(merged);
-///   Output: [ { a: 1, b: 4 }, { c: 6, d: 7 }, { e: 8 } ]
-
-
-//* REMOVE DUPLICATES
-/**
- * Removes duplicate elements from an array, or duplicate keys from an object.
- * If the input is a string, it will remove individual characters.
- * If you want to remove individual words, use the `removeWordDupes` function instead.
- * @param input The input array, object, or string to remove duplicates from.
- * @returns A new array, object, or string without duplicates.
- */
-export const removeDupes = (input: string | object | unknown[]): string | object | unknown[] => {
-  //! NOTE: STRING WILL REMOVE INDIVIDUAL CHARACTERS!
-  //? If you want to remove individual words you must use an array or 'removeWordDupes'.
-  const isString = typeof input === 'string';
-  const isArray = Array.isArray(input);
-  const isObject = typeof input === 'object' && !isArray && input !== null;
-
-  if (isObject) {
-    const keys = Object.keys(input);
-    const uniqueKeys = [...new Set(keys)];
-    const result: Record<string, unknown> = {};
-    for (const key of uniqueKeys) {
-      result[key] = (input as Record<string, unknown>)[key];
-    }
-    return result;
-  }
-  if (isArray) {
-    return new Set(input);
-  }
-  if (isString) {
-    return [...new Set(input.split(''))].join('');
-  }
-  return input;
-}
-
-
-//* REMOVE DUPLICATE WORDS IN A STRING
-/**
- * Removes duplicate words in a given string.
- *
- * @param {string} text - The input string.
- * @returns {string} The string with duplicate words removed.
- */
-export const removeWordDupes = (text: string) => {
-  return [...new Set(text.split(' '))].join('');
-}
-
-
-//* FLATTEN ARRAY OF ARRAYS
-//? Defaults to a completely flat array
 /**
  * Flattens an array of arrays to a specified depth or completely flat.
  *
- * @param {T[] | T[][]} arrays - The array(s) to be flattened.
+ * @param {T[]|T[][]} arrays - The array(s) to be flattened.
  * @param {number} [depth=Infinity] - The depth level specifying how deep a nested array should be flattened.
  * @returns {T[]} The flattened array.
- * @template T
+ * 
+ * @example
+ * const arr = [1, [2, [3, 4], 5], 6];
+ * const flattened = flatten(arr, 1);
+ * console.log(flattened); // Output: [1, 2, [3, 4], 5, 6]
  */
-export const flatten = <T>(arrays: T[] | T[][], depth?: number): T[] => {
+export const flatten = <T>(arrays: (T[] | T[][]), depth?: number): T[] => {
   if (hasArrays(arrays)) {
     depth = depth === undefined || depth < 1 ? Infinity : depth;
     return (arrays as T[][]).flat(depth) as T[];
@@ -100,26 +27,100 @@ export const flatten = <T>(arrays: T[] | T[][], depth?: number): T[] => {
   return arrays as T[];
 };
 
-//* FLATTEN AND REMOVE ALL DUPLICATES IN AN ARRAY
-//? Defaults to a completely flat array
 /**
  * Flattens an array of any type and removes all duplicate elements.
- * @param {unknown[]} array - The array to be flattened and smushed.
- * @returns {unknown[]} The flattened and smushed array with all duplicates removed.
+ * 
+ * @param {T[]} array - The array to be flattened and smushed.
+ * @returns {T[]} The flattened and smushed array with all duplicates removed.
+ * 
+ * @example
+ * const arr = [[1,2],[3,3,[4,5,6]],4,7];
+ * smush(arr); // [1,2,3,4,5,6,7]
  */
 export const smush = <T extends object>(array: T[]): T[] => {
   // Ensuring the function deals explicitly with objects in the array
   return [...new Set(flatten(array))];
 };
 
+/**
+ * Removes duplicate elements from an array, duplicate keys from an object, or characters from a string.
+ * Handles circular references by removing them or allowing one circular reference based on the provided configuration.
+ * 
+ * @param {T[]|Record<string,T>|string} input - The input array, object, or string from which to remove duplicates.
+ * @param allowOneCircularRef - Allows one level of circular reference, replacing further duplicates with null.
+ * @returns A new array, object, or string with duplicates and optionally circular references handled.
+ * 
+ * @example <caption>Removes duplicates from an array with circular references allowed</caption>
+ * const arrayWithCircularRefs = [{id: 1}, {id: 1}, {id: 2}];
+ * arrayWithCircularRefs[1] = arrayWithCircularRefs;
+ * removeDupes(arrayWithCircularRefs, true); // [{id: 1}, {id: 2}]
+ */
+export const removeDupes = <T>(
+  input: T[] | Record<string,T> | string,
+  allowOneCircularRef = false
+): T[] | Record<string,T> | string =>{
 
-//* REVERSE ORDER OF AN ARRAY
+  const seen = new WeakSet();
+  let isFirstCircular = allowOneCircularRef;
+
+  function handleValue(item: unknown) {
+    if (typeof item === 'object' && item !== null) {
+      if (seen.has(item)) {
+        if (isFirstCircular) {
+          isFirstCircular = false; // Allow one circular reference
+          return item;
+        }
+        return null; // Remove or nullify subsequent circular references
+      }
+      seen.add(item);
+    }
+    return item;
+  }
+
+  if (typeof input === 'string') {
+    const uniqueChars = [...new Set(input.split(''))].join('');
+    return uniqueChars;
+  } else if (Array.isArray(input)) {
+    const uniqueItems = input.filter(item => handleValue(item) !== null);
+    return uniqueItems;
+  } else {
+    const result: Record<string, T> = {};
+    for (const key in input) {
+      if (Object.hasOwnProperty.call(input, key)) {
+        const value = handleValue((input)[key]);
+        if (value !== null) result[key] = value as T;
+      }
+    }
+    return result;
+  }
+}
+
+/**
+ * Removes duplicate words in a given string.
+ *
+ * @param {string} text - The input string.
+ * @returns {string} The string with duplicate words removed.
+ * 
+ * @example
+ * const str = "The The Go go";
+ * removeWordDupes(str); // "The Go go"
+ */
+export const removeWordDupes = (text: string) => {
+  return [...new Set(text.split(' '))].join('');
+}
+
 /**
  * Returns a new array with the same elements as the input array, but in reverse order.
+ * 
  * @param input - The input array.
  * @returns A new array with the elements of the input array in reverse order.
+ * 
+ * @example
+ * const arr = [1, 2, 3, 4];
+ * const reversedArr = reverseArr(arr);
+ * console.log(reversedArr); // Output: [4, 3, 2, 1]
  */
-export const reverseArr = (input: unknown[]) => {
+export const reverseArr = <T>(input: T[]): (T | undefined)[] => {
   const output = [];
   if(input){
       for(let i = input.length-1; i >= 0; i--) {
@@ -129,55 +130,49 @@ export const reverseArr = (input: unknown[]) => {
   return output;
 }
 
-
-//* REMOVE ITEMS FROM AN ARRAY
 /**
- * Removes one or more items from an array and returns a new array.
- * @param {Array} array - The array to remove items from.
- * @param {unknown|Array} removeItems - The item or items to remove from the array. If an array is provided, all its items will be removed.
- * @returns {Array} A new array with the specified items removed.
+ * Removes specified items from an array, returning a new array.
+ * 
+ * @template T - The type of the items in the array.
+ * @param {T[]} array - The array to remove items from.
+ * @param {T|T[]} removeItems - An item or array of items to remove.
+ * @returns {T[]} A new array with the specified items removed.
+ * 
+ * @example
+ * removeFromArray([1, 2, 3, 4, 5], 2); // Returns [1, 3, 4, 5]
+ * removeFromArray([1, 2, 3, 4, 5], [2, 3]); // Returns [1, 4, 5]
  */
-export const removeFromArray = (array: unknown[], removeItems: unknown) => {
-  const itemsToRemove = Array.isArray(removeItems) ? removeItems : [removeItems];
-  return array.filter(value => !itemsToRemove.includes(value));
+export const removeFromArray = <T>(array: T[], removeItems: (T | T[])): T[] => {
+  const itemsToRemove = new Set(Array.isArray(removeItems) ? removeItems : [removeItems]);
+  return array.filter(item => !itemsToRemove.has(item));
 }
 
-
-//* SPLIT ARRAY INTO TWO SEPARATE ARRAYS
-
-//? This was initially made just to output an array with two halves whether it is even or odd, but
-//? now it does much more! You can choose the half split, there's a "human" split which splits it
-//? randomly on a bell curve somewhere around the middle, you can set 'randomSplit' to true and it
-//? it chooses a number halfway between 0 and the halfway point to be added or subtracted to the
-//? 'half' value, or choose an exaxt point to split.
-
-//? If only 'list' is entered this will just split the array in half as was initially intended. You
-//? can also add padding to ensure the length of each array is not less than a specified value to
-//? make sure the set split is within a specified range, especially useful when that value and/or the
-//? halfway point is unknown.
 /**
  * Splits an array into two separate arrays, weighted on the first half if uneven.
  * 
- * @param {unknown[]} list - The array to split.
- * @param {'bell' | boolean} [randomSplit] - Whether to split randomly on a bell curve, or to split at an exact point.
+ * @param {T[]} list - The array to split.
+ * @param {'bell'|boolean} [randomSplit] - Whether to split randomly on a bell curve, or to split at an exact point.
  * @param {number} [setSplit] - The exact point to split the array.
  * @param {number} [clampPad] - The padding to ensure the length of each array is not less than a specified value.
- * @param {boolean} [outputObj] - Whether to output an object instead of an array.
  * 
- * @returns {unknown[] | { a: unknown[], b: unknown[] }} - An array with two halves, or an object with two properties.
+ * @returns {[T[], T[]]} - An array with two halves.
+ * 
+ * @example
+ * const arr = [1, 2, 3, 4, 5];
+ * const [firstHalf, secondHalf] = splitArray(arr);
+ * console.log(firstHalf); // Output: [1, 2, 3]
+ * console.log(secondHalf); // Output: [4, 5]
  */
-
-export const splitArray = (
-  list: unknown[],
+export const splitArray = <T>(
+  list: T[],
   randomSplit?: 'bell' | boolean,
   setSplit?: number,
   clampPad?: number,
-  outputObj?: boolean
-) => {
+): [T[], T[]] => {
 
   const half = Math.ceil(list.length / 2); // The first array will get the extra item if array is odd
-  const randomVal = randomize(Math.ceil(half / 2)); // Random value at half of half
-  const split = cointoss() ? half+randomVal : half-randomVal;
+  const randomVal: number = randomize(Math.ceil(half / 2)); // Random value at half of half
+  const split = cointoss() ? half+randomVal : half-randomVal; // Random split point
   const splitAt = randomSplit && randomSplit !== "bell"
       ? split
     : randomSplit === "bell"
@@ -190,114 +185,86 @@ export const splitArray = (
   const max = (list.length-1)-padding;
 
   const finalSplit = ( setSplit ?? setSplit ) === 0 ? numberClamp(
-      toNum(setSplit), numberClamp(min, 1, half-1), numberClamp(max, half+1, list.length-1)
-    ) : false; // Ensure split remains between 1 and half with 'clampPad' value
+    toNum(setSplit), [(numberClamp(min, [1, half-1])), (numberClamp(max, [half+1, list.length-1]))])
+    : false; // Ensure split remains between 1 and half with 'clampPad' value
   
   const a = list.slice( 0, finalSplit ? finalSplit : splitAt );
   const b = list.slice( finalSplit ? finalSplit : splitAt );
 
   // Output an array unless 'outputObj' is true
-  return outputObj === true ? { a: a, b: b } : [ a, b ];
+  return [ a, b ];
 }
 
-
-//* RETURN ONE ITEM (or set/object) FROM AN ARRAY or ARRAY OF ARRAYS
 /**
- * Returns one randomly selected item from an array or array of arrays.
+ * Retrieves a random item or subset from an array or an array of arrays.
  *
- * @param {string|unknown[]} el - The array or array of arrays to select from.
- * @returns {any} A randomly selected item from the provided array.
+ * @param {(T | undefined)[]} input - The array or array of arrays to select from.
+ * @param {object} [options] - An object containing options for the selection.
+ * @param {number[]} [options.selectIndexes] - An array of indexes to consider when selecting from an array of arrays. If not provided, all indexes are considered.
+ * @param {boolean} [options.returnSubset=false] - Whether to return a subset (true) or a single item (false). Default is false.
+ * @returns {T[] | T | undefined} A randomly selected subset or single item from the input array or array of arrays. Returns undefined if the input is empty or the selectIndexes are invalid.
+ *
+ * @example <caption>Choosing a random single element from an array</caption>
+ * const arr = [1, 2, 3, 4, 5];
+ * const element = getRandomElement(arr);
+ * console.log(element); // Output: 3 (or any other single element from the array)
+ *
+ * @example <caption>Choosing a random subset from an array of arrays</caption>
+ * const arr = [["1a", "2a"], ["1b"], ["1c", "2c", "3c"], ["4b", "4c"]];
+ * const subset = getRandomElement(arr, { returnSubset: true, selectIndexes: [0, 2] });
+ * console.log(subset); // Output: ["1a", "2a"] (or ["1c", "2c", "3c"], depending on the random selection)
+ *
+ * @example <caption>Choosing a random item from an array of arrays</caption>
+ * const arr = [["1a", "2a"], ["1b"], ["1c", "2c", "3c"], ["4b", "4c"]];
+ * const item = getRandomElement(arr, { selectIndexes: [1, 2] });
+ * console.log(item); // Output: "1b" (or any other single element from the specified subsets)
  */
-export const select = (el: string | unknown[]) => {
-  const output = el[randomize(el.length)] as unknown[];
-  return output[randomize(output.length)] ? output[randomize(output.length)] : el[randomize(el.length)];
-}
-
-
-//* GET MULTIPLE RANDOM ITEMS FROM AN ARRAY OF ARRAYS
-/**
- * Returns a random selection from an array or array of arrays. 
- * 
- * @param {any[]} arraySet - The array or array of arrays to select from.
- * @param {number[]} [selectIndexesArray] - An optional array of indexes to select from.
- * @returns {any} - A random selection from the array(s).
- * 
- * @example
- * 
- * //* Select a random item from an array
- * const myArray = [1, 2, 3, 4, 5];
- * const selection = randomSelection(myArray);
- * console.log(selection); // Output: a random item from myArray
- *
- * //* Select a random item from an array of arrays
- * const myArrayOfArrays = [[1, 2], [3, 4, 5], [6]];
- * const selection = randomSelection(myArrayOfArrays);
- * console.log(selection); // Output: a random array from myArrayOfArrays
- *
- * //* Select a random item from an array of arrays using specified indexes
- * const myArrayOfArrays = [[1, 2], [3, 4, 5], [6]];
- * const selection = randomSelection(myArrayOfArrays, [0, 1]);
- * console.log(selection); // Output: a random array from the first two arrays in myArrayOfArrays
- */
-export const randomSelection = (
-  arraySet: unknown[],
-  selectIndexesArray?: number[]
-) => {
-  let output: unknown[] = [];
-  if (selectIndexesArray) {
-    for (let i=0; i < selectIndexesArray.length; i++) {
-      const n = selectIndexesArray[i];
-      if(checkType(n,'number')) {
-        output.push(arraySet[Number(n)]);
-      } else {
-        console.log(`All selected values must be numbers! Value
-        "${selectIndexesArray[i]}"at index ${i} was skipped...`);
-      }
-    }
-  } else {
-    output=arraySet;
+export const getRandomElement = <T>(
+  input: (T)[],
+  options?: { selectIndexes?: number[]; returnSubset?: boolean }
+): T[] | T | undefined => {
+  if (input.length === 0) {
+    return undefined;
   }
-  return output[randomize(output.length)];
-}
 
-//* RETURN A SINGLE ELEMENT OR SET FROM AN ARRAY OF ARRAYS
+  const { selectIndexes, returnSubset = false } = options ?? {};
+
+  const validIndexes = selectIndexes?.filter((index) => index >= 0 && index < input.length) ?? [];
+  const subsetsToConsider = validIndexes.length > 0 ? validIndexes.map((index) => input[index]) : input;
+
+  const filteredSubsets = subsetsToConsider.filter((subset): subset is T => Array.isArray(subset) || typeof subset !== 'undefined');
+
+  if (filteredSubsets.length === 0) {
+    return undefined;
+  }
+
+  const randomSubset = filteredSubsets[Math.floor(Math.random() * filteredSubsets.length)];
+
+  if (returnSubset) {
+    return randomSubset;
+  } else {
+    if (Array.isArray(randomSubset)) {
+      return randomSubset[Math.floor(Math.random() * randomSubset.length)] as T;
+    } else {
+      return randomSubset;
+    }
+  }
+};
+
 /**
- * Returns a single element or set from an array of arrays.
- * @param {Array} arraySet - The array of arrays being sorted.
- * @param {Boolean} [outputEntireSet=true] - Output entire array set (default) or just one element.
- * @param {Array} [selectIndexesArray] - Array conatining indexes of array sets to be considered.
- * Use to include only specific array sets from the array of arrays ("arraySet").
- * @returns {Array|String} Returns the selected array set or one element from an array set.
+ * Copies significant (non-null) values from a source array to a destination array.
+ *
+ * @param {(T | undefined)[]} src - The source array containing values to be copied.
+ * @param {(T | undefined)[]} dest - The destination array to which the significant values will be copied.
+ * @returns {(T | undefined)[]} The destination array with significant values copied from the source array.
  *
  * @example
- * //* Choosing one array set from an array of arrays
- * const arr = [["1a","2a"],["1b"],["1c","2c","3c"],["4b","4c"]]
- * arrayEl(arr, true, [0,2])
- * //* Output: ["1c","2c","3c"]
- * //* Selected 'arr[2]' from indexes 0 and 2
- *
- * @example
- * //* Choosing a single element from an array of arrays
- * const arr = [["1a","2a"],["1b"],["1c","2c","3c"],["4b","4c"]]
- * arrayEl(arr, false, [0,2])
- * //* Output: "2c"
- *
+ * const src = [1, undefined, 2, null, 3];
+ * const dest = [];
+ * const result = copyArrayData(src, dest);
+ * console.log(result); // Output: [1, 2, 3]
  */
-export const arrayEl = (
-  arraySet: unknown[],
-  outputEntireSet?: boolean,
-  selectIndexesArray?: number[],
-) => {
-  // Default to 'randomSelection' unless 'outputEntireSet' is false
-  outputEntireSet = outputEntireSet !== false ? true : false;
-  // Choose one set from the 'arraySet'
-  const randomOutput = randomSelection(arraySet, selectIndexesArray);
-  // Output an entire set or a single item from the set
-  return outputEntireSet ? randomOutput : select(arraySet);
-}
-
-// ONLY ALLOW SIGNIFICANT VALUES (non-Null) TO BE COPIED TO A NEW ARRAY
-export function copyArrayData(src: unknown[], dest: unknown[]) {
+export const copyArrayData = <T>(src: (T | undefined)[], dest: (T | undefined)[]) =>{
   // Determine the number of significant bytes in the source array
   const sigBytes = src.filter(function(byte) { return byte !== null; }).length;
   // Copy the data from the source array to the destination array
@@ -309,12 +276,10 @@ export function copyArrayData(src: unknown[], dest: unknown[]) {
 }
 
 
-/////////////////////////////
-// HANDLE SETTING ELEMENTS //
-/////////////////////////////
+//!=/=======================\=!//
+//?[ HANDLE SETTING ELEMENTS ]?//
+//!=\=======================/=!//
 
-//* SET NEW DATA TO AN OBJECT OR ARRAY
-//? Detects if data is an object or array and then combines new data appropriately based on its type
 /**
  * Combines two arrays or two objects, or an array and an object, 
  *  or an object with a new element, depending on their types.
@@ -331,21 +296,27 @@ export function copyArrayData(src: unknown[], dest: unknown[]) {
  *    If data and newData are objects, returns an object that has properties 
  *    of both objects, with newData overriding data properties with the same name.
  */
-export const set = (data: object | unknown[], newData: object | unknown[] | number | boolean | string) => {
-    const dontSpread = !Array.isArray(newData) && typeof newData !== 'object';
-    if (Array.isArray(data) && Array.isArray(newData)) {
-        return  [ ...data, ...newData ] as unknown;
-    } else if (typeof data === 'object' && typeof newData === 'object') {
-        return { ...data, ...newData };
-    } else if (Array.isArray(data) && typeof newData === 'object') {
-        return data.map(item => ({...item, ...newData}));
-    } else if (Array.isArray(data) && dontSpread) {
-        return  [ ...data, newData ];
-    } else if (typeof data === 'object' && dontSpread && !Array.isArray(data)) {
-        console.warn('Objects can only be combimed with other objects.');
+export function setData<T, U>(
+  data: T[] | Record<string, T>,
+  newData: U[] | Record<string, U> | U
+): (T | U)[] | Record<string, T | U> | void {
+  if (Array.isArray(data)) {
+    if (Array.isArray(newData)) {
+      return [...data, ...newData];
+    } else if (typeof newData === 'object' && newData !== null && !Array.isArray(newData)) {
+      return data.map(item => ({ ...item, ...newData as Record<string, U> }));
     } else {
-        console.warn('Data type must be an object or array.');
+      return [...data, newData];
     }
+  } else if (typeof data === 'object' && data !== null) {
+    if (typeof newData === 'object' && newData !== null && !Array.isArray(newData)) {
+      return { ...data, ...newData };
+    } else {
+      console.warn('Objects can only be combined with other objects.');
+    }
+  } else {
+    console.warn('Data type must be an object or array.');
+  }
 }
 
 /**
@@ -394,13 +365,12 @@ export function normalizeValues(values: (number | string)[], total = 100, toFixe
   return roundedValues;
 }
 
-
 /**
  * Iterates through an array of values and returns the first truthy value.
  * If all values are falsy, returns the last value in the array.
  * 
- * @param {Array<any>} values - The array of values to check.
- * @returns {any} - The first truthy value, or the last value if all are falsy.
+ * @param {Array<T>} values - The array of values to check.
+ * @returns {T | undefined} - The first truthy value, or the last value if all are falsy.
  * 
  * @example
  * //* Usage example

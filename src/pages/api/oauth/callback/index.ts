@@ -1,3 +1,4 @@
+// pages/api/oauth/callback/index.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           grant_type: 'authorization_code',
           client_id: process.env.GHL_CLIENT_ID,
           client_secret: process.env.GHL_CLIENT_SECRET,
-          redirect_uri: 'http://localhost:3000/api/oauth/callback/',
+          redirect_uri: 'http://localhost:3000/api/oauth/callback',
           code,
         }),
       });
@@ -30,6 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const data = await response.json();
+      console.log(data)
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const accessToken = String(data.access_token);
 

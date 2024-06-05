@@ -3,6 +3,7 @@ import html from 'remark-html';
 // import { wordCount } from '../validation/checks';
 import { WORDS_LIST } from '~/constants';
 import Image from 'next/image';
+import type { NodeProperties } from '~/types/NodeProperties';
 
 //! //=======================\\ !//
 //! || TEMPERATURE FUNCTIONS || !//
@@ -123,7 +124,7 @@ interface FullscreenDocument extends Document {
  * // To exit full-screen mode:
  * exitScreen();
  */
-export const exitScreen = async () => {
+export const exitFullScreen = async () => {
   const doc = document as FullscreenDocument;
 
   if (doc.exitFullscreen) {
@@ -164,9 +165,9 @@ export const exitScreen = async () => {
  * @param {boolean} [asAlert=false] - If true, an alert box is displayed instead of the default browser confirmation dialog.
  * @example
  * // To block the window from closing and show a custom message:
- * blockCloseWindow('Are you sure you want to leave this page?');
+ * blockWindowClose('Are you sure you want to leave this page?');
  */
-export const blockCloseWindow = (message: string, asAlert = false) => {
+export const blockWindowClose = (message: string, asAlert = false) => {
   const text = message || 'Are you sure you want to leave this page?';
   const alertMessage = alert(text)
   window.onbeforeunload = function(){
@@ -177,6 +178,26 @@ export const blockCloseWindow = (message: string, asAlert = false) => {
     return text;
   }
 };
+
+/**
+ * Checks if the current environment is a browser.
+ * @returns {boolean} True if the environment is a browser, false otherwise.
+ */
+export const isBrowser =
+	typeof window !== 'undefined' &&
+	typeof navigator !== 'undefined' &&
+	typeof document !== 'undefined';
+
+/**
+ * No operation function that does nothing.
+ * Useful as a placeholder or default value for callbacks.
+ * @example
+ * // To use as a placeholder function:
+ * const callback = () => {};
+ * callback = noop;
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const noop = (): void => {};
 
 //! //=============\\ !//
 //! || RETURN DATA || !//
@@ -293,7 +314,6 @@ export const canvasToImg = ({
     />
 };
 
-//* CONVERT MD TO HTML
 /**
  * Takes a string of markdown and returns a string of HTML.
  * @param {string} markdown - The markdown to convert to HTML.
@@ -307,7 +327,6 @@ export async function markdownToHtml(markdown: string): Promise<string> {
   return result.toString()
 }
 
-//* GET REGEX INFORMATION
 interface ExtendedRegExp extends RegExp {
   hasIndices: boolean; // Include new 'hasIndices' property in case it does not exist on 'RegExp' yet.
 }
@@ -325,48 +344,50 @@ export const getRegexData = (regex: ExtendedRegExp): ExtendedRegExp => {
   return regex;
 }
 
-//* GET NODE PROPERTIES
-// type NodeProperties = Record<string, string | null>;
-// type Accumulator = Record<string, string>
+type Accumulator = Record<string, unknown>;
 /**
  * Takes a node and returns an object containing its properties.
  * @param {NodeProperties} node - The node to get the properties of.
  * @returns {NodeProperties} An object containing the node's properties.
  * 
- * @example
- * //* To get the properties of a node:
+ * @example <caption>Get the properties of a node.</caption>
  * const node = document.querySelector('div');
  * const nodeProperties = getNodeProperties(node);
  * console.log(nodeProperties); // Outputs an object like { id: "myDiv", class: "myClass", style: "color: red;" }
  */
-// export const getNodeProperties = (node: NodeProperties): NodeProperties => {
-//   const showProperties = Object.entries(node)
-//     .filter(([_, value]) => value != null && value !== '')
-//     .reduce((acc: Accumulator, [key, value]) => {
-//       acc[key] = value!; // Non-null assertion used here
-//       return acc;
-//     }, {});
+export const getNodeProperties = (node: NodeProperties): NodeProperties => {
+  if (!isNodeProperties(node)) {
+    throw new Error('Invalid node properties');
+  }
 
-//   return showProperties;
-// };
+  const showProperties = Object.entries(node)
+    .filter(([, value]) => value !== null && value !== '')
+    .reduce<Accumulator>((acc, [key, value]) => {
+      acc[key as keyof NodeProperties] = value;
+      return acc;
+    }, {});
 
-//* GENERATE RANDOM WORDS FROM WORDS_LIST
+  return showProperties;
+};
+
+function isNodeProperties(obj: object): obj is NodeProperties {
+  const keys = Object.keys(obj);
+  return keys.every(key => key in obj);
+}
+
 /**
  * Generates a string of random words from the WORDS_LIST.
  * 
  * @param {number} wordCount - The number of random words to generate. Defaults to 1.
  * @returns {string[]} An array of randomly selected words.
  * 
- * @example
- * //* Generating an array of a single random word
+ * @example <caption>Generating an array of a single random word</caption>
  * console.log(randomWord()); // Outputs a word: ["like"]
  * 
- * @example
- * //* Generating an array of 5 random words
+ * @example <caption>Generating an array of 5 random words</caption>
  * console.log(randomWord(5)); // Outputs a string of words: ["just", "weapon", "like", "weary", "like"]
  * 
- * @example
- * //* Generating a string of random words
+ * @example <caption>Generating a string of random words</caption>
  * console.log(randomWord(5).join(' ')); // Outputs a string of words: "just weapon like weary like"
  */
 export const randomWord = (wordCount?: number): string[] => {

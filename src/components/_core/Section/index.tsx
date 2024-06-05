@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import type { WidthProperty, HeightProperty } from '~/types/declarations/css.d.ts';
 import type { ExtendedCSSUnits } from '~/types/Units';
-import withAutoAnimate from '~/hoc/withAutoAnimate';
+import withAutoAnimate from '~/hocs/withAutoAnimate';
 import { classnames } from '~/utils/global';
 import styles from './section.module.css';
 

@@ -16,83 +16,42 @@ export const validEmail = (email: string): boolean => {
   return REGEX_PATTERNS.email.test(email);
 };
 
-
-/**
- * Checks if a string has special characters.
- * @param {string} str - The string to check.
- * @returns {boolean} True if the string has special characters, false otherwise.
- * 
- * @example
- * hasSpecialChars('hello world'); // false
- * hasSpecialChars('hello*world'); // true
- */
-export const hasSpecialChars = (str: string): boolean => {
-  return REGEX_PATTERNS.specialChar.test(str);
+export const validName = (name: string): boolean => {
+  return REGEX_PATTERNS.name.test(name);
 };
 
-
 /**
- * Checks if a phone number is valid.
- * @param {string} phoneNumber - The phone number to check.
- * @returns {boolean} True if the phone number is valid, false otherwise.
- * 
- * @example
- * validPhoneNumber('+1-202-555-0104'); // true
- * validPhoneNumber('202-555-0104'); // true
- * validPhoneNumber('2025550104'); // true
- * validPhoneNumber('202 555 0104'); // true
- * validPhoneNumber('202.555.0104'); // true
- * validPhoneNumber('202/555/0104'); // true
- * validPhoneNumber('202555010'); // false
- * 
- * @url https://stackoverflow.com/questions/4338267/validate-phone-number-with-javascript
- * @url https://apilayer.com/marketplace/number_verification-api // API to check for valid, working phone numbers
- */
-export const validPhoneNumber = (phoneNumber: string) => {
-  const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-  return regex.test(phoneNumber);
-}
-
-
-/**
- * Checks if a string contains consecutive repeating characters.
+ * Checks if a number is valid U.S./Canada phone number.
+ * Allows for a strict pattern match which is more precise in matching specific formats,
+ * or a lenient match that broadly accepts various common phone number formats.
  *
- * @param {string} string - The string to check for consecutive characters.
- * @param {boolean} [checkCasing=true] - Whether to consider character casing for repeats. If `false`, 'A' and 'a' will be considered the same.
- * @param {number} [limit=2] - The number of allowed consecutive characters before considering it a repeat. Must be at least 1.
- * @returns {boolean} - `true` if the string contains more than the specified limit of consecutive repeating characters, `false` otherwise.
- * 
- * @example
- * //* Check for more than 2 consecutive characters (case-sensitive)
- * consecutiveChars('aaabbb', true, 2); // true
- * 
- * @example
- * //* Check for more than 3 consecutive characters (case-insensitive)
- * consecutiveChars('aaAbBB', false, 3); // false
+ * @param {string} phoneNumber - The phone number to validate.
+ * @param {boolean} [strict=false] - Set to true for strict pattern matching which requires specific formatting
+ *                                   and valid area code and exchange code (must start with digits 2-9).
+ * @returns {boolean} - Returns true if the phone number is valid according to the chosen pattern, otherwise false.
+ *
+ * @example <caption>Examples of valid and invalid phone numbers. [strict=true]</caption>
+ * validPhoneNumber('+1-202-555-0104', true); // true, correctly formatted North American phone number.
+ * validPhoneNumber('202-555-0104', true); // true, correctly formatted with hyphens.
+ * validPhoneNumber('2025550104', true); // false, continuous digits not accepted.
+ * validPhoneNumber('(202) 555-0104', true); // true, correct format with parentheses around area code.
+ * validPhoneNumber('202 555 0104', true); // false, space separators not acceptable in strict mode for this regex.
+ * validPhoneNumber('192-555-0104', true); // false, area code starts with '1' which is invalid.
+ *
+ * @example <caption>Examples of valid and invalid phone numbers. [strict=false]</caption>
+ * validPhoneNumber('+1-202-555-0104'); // true, accepts with or without country code.
+ * validPhoneNumber('202-555-0104'); // true, standard format with hyphens.
+ * validPhoneNumber('2025550104'); // true, continuous digits are accepted.
+ * validPhoneNumber('202 555 0104'); // true, spaces as separators are acceptable.
+ * validPhoneNumber('202.555.0104'); // true, dots as separators are acceptable.
+ * validPhoneNumber('202555010'); // false, insufficient number of digits.
+ * validPhoneNumber('(202) 555-0104'); // true, parentheses around the area code are acceptable.
+ * validPhoneNumber('192 555 0104'); // true, lenient mode does not verify the first digit of area codes.
  */
-export const consecutiveChars = (string: string, checkCasing?: boolean, limit?: number): boolean => {
-
-  string = checkCasing === false ? string : string.toLowerCase();  
-  // If 'checkCasing' is false then repeats of the same character in
-  // different cases will be ignored. Defaults to 'true'.
-
-  limit = limit && Number.isFinite(limit) && limit > 0 ? Number(limit) : 2;
-  // Limit must be at least 1
-
-  const pattern = checkCasing === false ? /([a-zA-Z0-9])\1+/g : /([a-z0-9])\1+/g; 
-  const matches = string.match(pattern);
-
-  if (string && matches) {
-    for (const match of matches) {
-      if (match.length > limit) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+export const validPhoneNumber = (phoneNumber: string, strict = false): boolean => {
+  const regex = strict ? REGEX_PATTERNS.phone : /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  return regex.test(phoneNumber);
 };
-
 
 /**
  * Turns a string into a filename string.
@@ -111,7 +70,6 @@ export const fileName = (string: string) => {
   return output;
 }
 
-
 /**
  * Turns a filename string into a regular string.
  * @param {string} string - The filename string to convert.
@@ -128,7 +86,6 @@ export const unFileName = (string: string) => {
   }
   return undefined;
 }
-
 
 /**
  * Formats a URL string to be a valid HTTPS URL.
@@ -188,3 +145,55 @@ export function formatUrl(
   
   return formattedUrl;
 }
+
+/**
+ * Checks if a string has special characters.
+ * @param {string} str - The string to check.
+ * @returns {boolean} True if the string has special characters, false otherwise.
+ * 
+ * @example
+ * hasSpecialChars('hello world'); // false
+ * hasSpecialChars('hello*world'); // true
+ */
+export const hasSpecialChars = (str: string): boolean => {
+  return REGEX_PATTERNS.specialChar.test(str);
+};
+
+/**
+ * Checks if a string contains consecutive repeating characters.
+ *
+ * @param {string} string - The string to check for consecutive characters.
+ * @param {boolean} [checkCasing=true] - Whether to consider character casing for repeats. If `false`, 'A' and 'a' will be considered the same.
+ * @param {number} [limit=2] - The number of allowed consecutive characters before considering it a repeat. Must be at least 1.
+ * @returns {boolean} - `true` if the string contains more than the specified limit of consecutive repeating characters, `false` otherwise.
+ * 
+ * @example
+ * //* Check for more than 2 consecutive characters (case-sensitive)
+ * consecutiveChars('aaabbb', true, 2); // true
+ * 
+ * @example
+ * //* Check for more than 3 consecutive characters (case-insensitive)
+ * consecutiveChars('aaAbBB', false, 3); // false
+ */
+export const consecutiveChars = (string: string, checkCasing?: boolean, limit?: number): boolean => {
+
+  string = checkCasing === false ? string : string.toLowerCase();  
+  // If 'checkCasing' is false then repeats of the same character in
+  // different cases will be ignored. Defaults to 'true'.
+
+  limit = limit && Number.isFinite(limit) && limit > 0 ? Number(limit) : 2;
+  // Limit must be at least 1
+
+  const pattern = checkCasing === false ? /([a-zA-Z0-9])\1+/g : /([a-z0-9])\1+/g; 
+  const matches = string.match(pattern);
+
+  if (string && matches) {
+    for (const match of matches) {
+      if (match.length > limit) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
